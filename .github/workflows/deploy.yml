@@ -62,6 +62,7 @@ jobs:
           npm run build
         env:
           REACT_APP_API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          CI: false
 
       - name: Deploy to S3
         run: |
