@@ -19,7 +19,7 @@ jobs:
           zip -r ../backend.zip . -x "node_modules/*" "__tests__/*" "jest.config.js" ".gitignore"
 
       - name: Deploy Backend Function
-        uses: yandex-cloud/serverless-functions-deploy-action@v1
+        uses: yc-actions/yc-sls-function@v2
         with:
           token: ${{ secrets.YC_SERVICE_ACCOUNT_KEY }}
           function-id: ${{ secrets.YC_FUNCTION_ID }}
