@@ -13,26 +13,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install YC CLI
+        run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          echo "$HOME/yandex-cloud/bin" >> $GITHUB_PATH
+
+      - name: Configure YC
+        run: |
+          echo "${{ secrets.YC_SERVICE_ACCOUNT_KEY }}" > sa-key.json
+          yc config profile create sa-profile || true
+          yc config set service-account-key sa-key.json
+          yc config set folder-id ${{ secrets.YC_FOLDER_ID }}
+        env:
+          YC_SERVICE_ACCOUNT_KEY: ${{ secrets.YC_SERVICE_ACCOUNT_KEY }}
+
       - name: Create Backend Zip
         run: |
           cd backend
           zip -r ../backend.zip . -x "node_modules/*" "__tests__/*" "jest.config.js" ".gitignore"
 
       - name: Deploy Backend Function
-        uses: yc-actions/yc-sls-function@v2
-        with:
-          token: ${{ secrets.YC_SERVICE_ACCOUNT_KEY }}
-          function-id: ${{ secrets.YC_FUNCTION_ID }}
-          folder-id: ${{ secrets.YC_FOLDER_ID }}
-          runtime: nodejs18
-          entrypoint: server.handler
-          memory: 256m
-          execution-timeout: 10s
-          environment: |
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            YDB_ENDPOINT=${{ secrets.YDB_ENDPOINT }}
-            YDB_DATABASE=${{ secrets.YDB_DATABASE }}
-          source-path: backend.zip
+        run: |
+          yc serverless function version create \
+            --function-name=healthy-back-api \
+            --runtime=nodejs18 \
+            --entrypoint=server.handler \
+            --memory=256m \
+            --execution-timeout=10s \
+            --environment JWT_SECRET="${{ secrets.JWT_SECRET }}",YDB_ENDPOINT="${{ secrets.YDB_ENDPOINT }}",YDB_DATABASE="${{ secrets.YDB_DATABASE }}" \
+            --source-path=./backend.zip
 
   deploy-frontend:
     runs-on: ubuntu-latest
