@@ -1,0 +1,12 @@
+node_modules/
+build/
+.env
+*.log
+backend.zip
+test_output.txt
+regression_output.txt
+workout_flow_output.txt
+frontend/node_modules/
+backend/node_modules/
+frontend/build/
+.DS_Store

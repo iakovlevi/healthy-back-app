@@ -1,0 +1,1483 @@
+
+> healthy-back-frontend@0.1.0 test
+> react-scripts test --watchAll=false
+
+PASS src/app.utils.test.js
+PASS src/AuthScreen.test.js
+PASS src/workoutFlow.test.js
+  ● Console
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1364 |[39m                                     [33m<[39m[33mbutton[39m
+     [90m 1365 |[39m                                         data[33m-[39mtestid[33m=[39m[32m"start-screen-more-button"[39m
+    [31m[1m>[22m[39m[90m 1366 |[39m                                         onClick[33m=[39m{() [33m=>[39m setShowAllExercises([36mtrue[39m)}
+     [90m      |[39m                                                        [31m[1m^[22m[39m
+     [90m 1367 |[39m                                         className[33m=[39m[32m"w-full py-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors border-t border-slate-200 mt-2"[39m
+     [90m 1368 |[39m                                     [33m>[39m
+     [90m 1369 |[39m                                         [33mЕще[39m {workout[33m.[39mexercises[33m.[39mlength [33m-[39m [35m3[39m} упражнений[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setShowAllExercises (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onClick (src/app.js:1366:56)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:75:9)
+
+    console.log
+      [ANALYTICS] workout_start { workoutId: 'single_goblet', source: undefined }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1398 |[39m                             [36mif[39m (preSurveyDone) {
+     [90m 1399 |[39m                                 [36mif[39m (currentEx[33m.[39misStrength) {
+    [31m[1m>[22m[39m[90m 1400 |[39m                                     setStep([32m'strength_config'[39m)[33m;[39m
+     [90m      |[39m                                     [31m[1m^[22m[39m
+     [90m 1401 |[39m                                 } [36melse[39m {
+     [90m 1402 |[39m                                     setStep([32m'playing'[39m)[33m;[39m
+     [90m 1403 |[39m                                     setIsPaused([36mfalse[39m)[33m;[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setStep (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onClick (src/app.js:1400:37)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:102:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1436 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1437 |[39m                                     value[33m=[39m{currentWeight}
+    [31m[1m>[22m[39m[90m 1438 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setCurrentWeight(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1439 |[39m                                     placeholder[33m=[39m[32m"0"[39m
+     [90m 1440 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1441 |[39m                                 [33m/[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setCurrentWeight (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1438:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at node_modules/@testing-library/user-event/dist/cjs/event/behavior/keypress.js:31:26
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:41:13)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at KeyboardHost.keydown (node_modules/@testing-library/user-event/dist/cjs/system/keyboard.js:76:22)
+      at keyboardAction (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:22:35)
+      at Object.keyboard (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:11:15)
+      at Object.type (node_modules/@testing-library/user-event/dist/cjs/utility/type.js:17:5)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1436 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1437 |[39m                                     value[33m=[39m{currentWeight}
+    [31m[1m>[22m[39m[90m 1438 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setCurrentWeight(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1439 |[39m                                     placeholder[33m=[39m[32m"0"[39m
+     [90m 1440 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1441 |[39m                                 [33m/[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setCurrentWeight (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1438:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at node_modules/@testing-library/user-event/dist/cjs/event/behavior/keypress.js:31:26
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:41:13)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at KeyboardHost.keydown (node_modules/@testing-library/user-event/dist/cjs/system/keyboard.js:76:22)
+      at keyboardAction (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:22:35)
+      at Object.keyboard (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:11:15)
+      at Object.type (node_modules/@testing-library/user-event/dist/cjs/utility/type.js:17:5)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1447 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1448 |[39m                                     value[33m=[39m{configSets}
+    [31m[1m>[22m[39m[90m 1449 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setConfigSets(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1450 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1451 |[39m                                 [33m/[39m[33m>[39m
+     [90m 1452 |[39m                             [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setConfigSets (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1449:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at Object.clear (node_modules/@testing-library/user-event/dist/cjs/utility/clear.js:29:11)
+      at node_modules/@testing-library/user-event/dist/cjs/setup/setup.js:85:45
+      at Object.asyncWrapper (node_modules/@testing-library/dom/dist/config.js:23:23)
+      at Object.wrapAsync (node_modules/@testing-library/user-event/dist/cjs/setup/wrapAsync.js:8:28)
+      at Object.clear (node_modules/@testing-library/user-event/dist/cjs/setup/setup.js:85:26)
+      at Object.<anonymous> (src/workoutFlow.test.js:106:20)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1447 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1448 |[39m                                     value[33m=[39m{configSets}
+    [31m[1m>[22m[39m[90m 1449 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setConfigSets(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1450 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1451 |[39m                                 [33m/[39m[33m>[39m
+     [90m 1452 |[39m                             [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setConfigSets (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1449:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at node_modules/@testing-library/user-event/dist/cjs/event/behavior/keypress.js:31:26
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:41:13)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at KeyboardHost.keydown (node_modules/@testing-library/user-event/dist/cjs/system/keyboard.js:76:22)
+      at keyboardAction (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:22:35)
+      at Object.keyboard (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:11:15)
+      at Object.type (node_modules/@testing-library/user-event/dist/cjs/utility/type.js:17:5)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1460 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1461 |[39m                                     value[33m=[39m{configReps}
+    [31m[1m>[22m[39m[90m 1462 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setConfigReps(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1463 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1464 |[39m                                 [33m/[39m[33m>[39m
+     [90m 1465 |[39m                             [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setConfigReps (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1462:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at Object.clear (node_modules/@testing-library/user-event/dist/cjs/utility/clear.js:29:11)
+      at node_modules/@testing-library/user-event/dist/cjs/setup/setup.js:85:45
+      at Object.asyncWrapper (node_modules/@testing-library/dom/dist/config.js:23:23)
+      at Object.wrapAsync (node_modules/@testing-library/user-event/dist/cjs/setup/wrapAsync.js:8:28)
+      at Object.clear (node_modules/@testing-library/user-event/dist/cjs/setup/setup.js:85:26)
+      at Object.<anonymous> (src/workoutFlow.test.js:108:20)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1460 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1461 |[39m                                     value[33m=[39m{configReps}
+    [31m[1m>[22m[39m[90m 1462 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setConfigReps(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1463 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1464 |[39m                                 [33m/[39m[33m>[39m
+     [90m 1465 |[39m                             [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setConfigReps (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1462:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at node_modules/@testing-library/user-event/dist/cjs/event/behavior/keypress.js:31:26
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:41:13)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at KeyboardHost.keydown (node_modules/@testing-library/user-event/dist/cjs/system/keyboard.js:76:22)
+      at keyboardAction (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:22:35)
+      at Object.keyboard (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:11:15)
+      at Object.type (node_modules/@testing-library/user-event/dist/cjs/utility/type.js:17:5)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1470 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1471 |[39m                                     value[33m=[39m{configRest}
+    [31m[1m>[22m[39m[90m 1472 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setConfigRest(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1473 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1474 |[39m                                 [33m/[39m[33m>[39m
+     [90m 1475 |[39m                             [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setConfigRest (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1472:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at Object.clear (node_modules/@testing-library/user-event/dist/cjs/utility/clear.js:29:11)
+      at node_modules/@testing-library/user-event/dist/cjs/setup/setup.js:85:45
+      at Object.asyncWrapper (node_modules/@testing-library/dom/dist/config.js:23:23)
+      at Object.wrapAsync (node_modules/@testing-library/user-event/dist/cjs/setup/wrapAsync.js:8:28)
+      at Object.clear (node_modules/@testing-library/user-event/dist/cjs/setup/setup.js:85:26)
+      at Object.<anonymous> (src/workoutFlow.test.js:110:20)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1470 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1471 |[39m                                     value[33m=[39m{configRest}
+    [31m[1m>[22m[39m[90m 1472 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setConfigRest(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1473 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1474 |[39m                                 [33m/[39m[33m>[39m
+     [90m 1475 |[39m                             [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setConfigRest (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1472:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at node_modules/@testing-library/user-event/dist/cjs/event/behavior/keypress.js:31:26
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:41:13)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at KeyboardHost.keydown (node_modules/@testing-library/user-event/dist/cjs/system/keyboard.js:76:22)
+      at keyboardAction (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:22:35)
+      at Object.keyboard (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:11:15)
+      at Object.type (node_modules/@testing-library/user-event/dist/cjs/utility/type.js:17:5)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1470 |[39m                                     type[33m=[39m[32m"number"[39m
+     [90m 1471 |[39m                                     value[33m=[39m{configRest}
+    [31m[1m>[22m[39m[90m 1472 |[39m                                     onChange[33m=[39m{(e) [33m=>[39m setConfigRest(e[33m.[39mtarget[33m.[39mvalue)}
+     [90m      |[39m                                                      [31m[1m^[22m[39m
+     [90m 1473 |[39m                                     className[33m=[39m[32m"w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-bold text-xl focus:border-rose-500 focus:outline-none transition-colors"[39m
+     [90m 1474 |[39m                                 [33m/[39m[33m>[39m
+     [90m 1475 |[39m                             [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setConfigRest (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at onChange (src/app.js:1472:54)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLInputElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLInputElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLInputElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at commitInput (node_modules/@testing-library/user-event/dist/cjs/event/input.js:145:14)
+      at editInputElement (node_modules/@testing-library/user-event/dist/cjs/event/input.js:115:9)
+      at Object.input (node_modules/@testing-library/user-event/dist/cjs/event/input.js:37:9)
+      at node_modules/@testing-library/user-event/dist/cjs/event/behavior/keypress.js:31:26
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:41:13)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at KeyboardHost.keydown (node_modules/@testing-library/user-event/dist/cjs/system/keyboard.js:76:22)
+      at keyboardAction (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:22:35)
+      at Object.keyboard (node_modules/@testing-library/user-event/dist/cjs/keyboard/index.js:11:15)
+      at Object.type (node_modules/@testing-library/user-event/dist/cjs/utility/type.js:17:5)
+
+    console.log
+      [ANALYTICS] strength_config_save { exerciseId: 'goblet_squat', weight: '10', sets: '2', reps: '5' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1220 |[39m             reps[33m:[39m configReps
+     [90m 1221 |[39m         })[33m;[39m
+    [31m[1m>[22m[39m[90m 1222 |[39m         setCurrentSet([35m1[39m)[33m;[39m
+     [90m      |[39m         [31m[1m^[22m[39m
+     [90m 1223 |[39m         setIsResting([36mfalse[39m)[33m;[39m
+     [90m 1224 |[39m         setStep([32m'playing'[39m)[33m;[39m
+     [90m 1225 |[39m         setIsPaused([36mfalse[39m)[33m;[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setCurrentSet (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at startStrengthWorkout (src/app.js:1222:9)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:113:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1221 |[39m         })[33m;[39m
+     [90m 1222 |[39m         setCurrentSet([35m1[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 1223 |[39m         setIsResting([36mfalse[39m)[33m;[39m
+     [90m      |[39m         [31m[1m^[22m[39m
+     [90m 1224 |[39m         setStep([32m'playing'[39m)[33m;[39m
+     [90m 1225 |[39m         setIsPaused([36mfalse[39m)[33m;[39m
+     [90m 1226 |[39m         setIsActive([36mtrue[39m)[33m;[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setIsResting (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at startStrengthWorkout (src/app.js:1223:9)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:113:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1222 |[39m         setCurrentSet([35m1[39m)[33m;[39m
+     [90m 1223 |[39m         setIsResting([36mfalse[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 1224 |[39m         setStep([32m'playing'[39m)[33m;[39m
+     [90m      |[39m         [31m[1m^[22m[39m
+     [90m 1225 |[39m         setIsPaused([36mfalse[39m)[33m;[39m
+     [90m 1226 |[39m         setIsActive([36mtrue[39m)[33m;[39m
+     [90m 1227 |[39m     }[33m;[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setStep (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at startStrengthWorkout (src/app.js:1224:9)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:113:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1223 |[39m         setIsResting([36mfalse[39m)[33m;[39m
+     [90m 1224 |[39m         setStep([32m'playing'[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 1225 |[39m         setIsPaused([36mfalse[39m)[33m;[39m
+     [90m      |[39m         [31m[1m^[22m[39m
+     [90m 1226 |[39m         setIsActive([36mtrue[39m)[33m;[39m
+     [90m 1227 |[39m     }[33m;[39m
+     [90m 1228 |[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setIsPaused (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at startStrengthWorkout (src/app.js:1225:9)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:113:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1224 |[39m         setStep([32m'playing'[39m)[33m;[39m
+     [90m 1225 |[39m         setIsPaused([36mfalse[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 1226 |[39m         setIsActive([36mtrue[39m)[33m;[39m
+     [90m      |[39m         [31m[1m^[22m[39m
+     [90m 1227 |[39m     }[33m;[39m
+     [90m 1228 |[39m
+     [90m 1229 |[39m     [36mconst[39m completeSet [33m=[39m () [33m=>[39m {[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setIsActive (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at startStrengthWorkout (src/app.js:1226:9)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:113:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1231 |[39m             [36mconst[39m rest [33m=[39m parseInt(configRest)[33m;[39m
+     [90m 1232 |[39m             [36mif[39m (rest [33m>[39m [35m0[39m) {
+    [31m[1m>[22m[39m[90m 1233 |[39m                 setIsResting([36mtrue[39m)[33m;[39m
+     [90m      |[39m                 [31m[1m^[22m[39m
+     [90m 1234 |[39m                 setRestTimeLeft(rest)[33m;[39m
+     [90m 1235 |[39m             } [36melse[39m {
+     [90m 1236 |[39m                 startNextSet()[33m;[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setIsResting (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at completeSet (src/app.js:1233:17)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:116:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1232 |[39m             [36mif[39m (rest [33m>[39m [35m0[39m) {
+     [90m 1233 |[39m                 setIsResting([36mtrue[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 1234 |[39m                 setRestTimeLeft(rest)[33m;[39m
+     [90m      |[39m                 [31m[1m^[22m[39m
+     [90m 1235 |[39m             } [36melse[39m {
+     [90m 1236 |[39m                 startNextSet()[33m;[39m
+     [90m 1237 |[39m             }[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setRestTimeLeft (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at completeSet (src/app.js:1234:17)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:116:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1242 |[39m
+     [90m 1243 |[39m     [36mconst[39m startNextSet [33m=[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 1244 |[39m         setCurrentSet(s [33m=>[39m s [33m+[39m [35m1[39m)[33m;[39m
+     [90m      |[39m         [31m[1m^[22m[39m
+     [90m 1245 |[39m         setIsResting([36mfalse[39m)[33m;[39m
+     [90m 1246 |[39m         setRestTimeLeft([35m0[39m)[33m;[39m
+     [90m 1247 |[39m     }[33m;[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setCurrentSet (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at startNextSet (src/app.js:1244:9)
+      at skipRest (src/app.js:1250:9)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:119:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1243 |[39m     [36mconst[39m startNextSet [33m=[39m () [33m=>[39m {
+     [90m 1244 |[39m         setCurrentSet(s [33m=>[39m s [33m+[39m [35m1[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 1245 |[39m         setIsResting([36mfalse[39m)[33m;[39m
+     [90m      |[39m         [31m[1m^[22m[39m
+     [90m 1246 |[39m         setRestTimeLeft([35m0[39m)[33m;[39m
+     [90m 1247 |[39m     }[33m;[39m
+     [90m 1248 |[39m[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setIsResting (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at startNextSet (src/app.js:1245:9)
+      at skipRest (src/app.js:1250:9)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:119:9)
+
+    console.error
+      Warning: An update to WorkoutPlayer inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+          at WorkoutPlayer (D:\Apps\phys\frontend\src\app.js:1139:26)
+
+    [0m [90m 1244 |[39m         setCurrentSet(s [33m=>[39m s [33m+[39m [35m1[39m)[33m;[39m
+     [90m 1245 |[39m         setIsResting([36mfalse[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 1246 |[39m         setRestTimeLeft([35m0[39m)[33m;[39m
+     [90m      |[39m         [31m[1m^[22m[39m
+     [90m 1247 |[39m     }[33m;[39m
+     [90m 1248 |[39m
+     [90m 1249 |[39m     [36mconst[39m skipRest [33m=[39m () [33m=>[39m {[0m
+
+      at printWarning (node_modules/react-dom/cjs/react-dom.development.js:86:30)
+      at error (node_modules/react-dom/cjs/react-dom.development.js:60:7)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom.development.js:27628:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom.development.js:25547:5)
+      at setRestTimeLeft (node_modules/react-dom/cjs/react-dom.development.js:16708:7)
+      at startNextSet (src/app.js:1246:9)
+      at skipRest (src/app.js:1250:9)
+      at HTMLUnknownElement.callCallback (node_modules/react-dom/cjs/react-dom.development.js:4164:14)
+      at HTMLUnknownElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLUnknownElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLUnknownElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLUnknownElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at Object.invokeGuardedCallbackDev (node_modules/react-dom/cjs/react-dom.development.js:4213:16)
+      at invokeGuardedCallback (node_modules/react-dom/cjs/react-dom.development.js:4277:31)
+      at invokeGuardedCallbackAndCatchFirstError (node_modules/react-dom/cjs/react-dom.development.js:4291:25)
+      at executeDispatch (node_modules/react-dom/cjs/react-dom.development.js:9041:3)
+      at processDispatchQueueItemsInOrder (node_modules/react-dom/cjs/react-dom.development.js:9073:7)
+      at processDispatchQueue (node_modules/react-dom/cjs/react-dom.development.js:9086:5)
+      at dispatchEventsForPlugins (node_modules/react-dom/cjs/react-dom.development.js:9097:3)
+      at node_modules/react-dom/cjs/react-dom.development.js:9288:12
+      at batchedUpdates$1 (node_modules/react-dom/cjs/react-dom.development.js:26179:12)
+      at batchedUpdates (node_modules/react-dom/cjs/react-dom.development.js:3991:12)
+      at dispatchEventForPluginEventSystem (node_modules/react-dom/cjs/react-dom.development.js:9287:3)
+      at dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay (node_modules/react-dom/cjs/react-dom.development.js:6465:5)
+      at dispatchEvent (node_modules/react-dom/cjs/react-dom.development.js:6457:5)
+      at dispatchDiscreteEvent (node_modules/react-dom/cjs/react-dom.development.js:6430:5)
+      at HTMLDivElement.callTheUserObjectsOperation (node_modules/jsdom/lib/jsdom/living/generated/EventListener.js:26:30)
+      at innerInvokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:338:25)
+      at invokeEventListeners (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:274:3)
+      at HTMLButtonElementImpl._dispatch (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:221:9)
+      at HTMLButtonElementImpl.dispatchEvent (node_modules/jsdom/lib/jsdom/living/events/EventTarget-impl.js:94:17)
+      at HTMLButtonElement.dispatchEvent (node_modules/jsdom/lib/jsdom/living/generated/EventTarget.js:231:34)
+      at node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:43
+      at Object.eventWrapper (node_modules/@testing-library/dom/dist/config.js:25:23)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.<anonymous> (src/workoutFlow.test.js:119:9)
+
+PASS src/ReadinessSurveyModal.test.js
+  ● Console
+
+    console.log
+      [ANALYTICS] readiness_survey_start { context: 'pre' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.log
+      [ANALYTICS] daily_prefill_shown { context: 'pre' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.log
+      [ANALYTICS] daily_prefill_edited { context: 'pre' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.log
+      [ANALYTICS] questionnaire_details_opened { context: 'pre' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.log
+      [ANALYTICS] readiness_survey_start { context: 'post' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.log
+      [ANALYTICS] readiness_survey_start { context: 'daily' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.log
+      [ANALYTICS] question_skipped { context: 'daily', question: 'readiness' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.log
+      [ANALYTICS] readiness_survey_complete { context: 'daily', completionLevel: 'core' }
+
+      at trackEvent (src/app.js:50:13)
+
+    console.log
+      [ANALYTICS] readiness_feedback_viewed { context: 'daily', category: 'none' }
+
+      at trackEvent (src/app.js:50:13)
+
+
+Test Suites: 4 passed, 4 total
+Tests:       21 passed, 21 total
+Snapshots:   0 total
+Time:        2.663 s
+Ran all test suites.
