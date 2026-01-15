@@ -58,8 +58,8 @@ let dbDriver = new Driver({
 
 (async () => {
     try {
-        if (!await dbDriver.ready(10000)) {
-            console.error('[DB] Driver not ready!');
+        if (!await dbDriver.ready(20000)) {
+            console.error('[DB] Driver not ready after 20s!');
         } else {
             console.log('[DB] Connected successfully to YDB');
         }

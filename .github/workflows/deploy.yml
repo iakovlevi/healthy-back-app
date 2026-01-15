@@ -22,6 +22,9 @@ jobs:
           export PATH="$HOME/yandex-cloud/bin:$PATH"
           yc config set service-account-key sa-key.json
           yc config set folder-id ${{ secrets.YC_FOLDER_ID }}
+          # Extract Service Account ID using jq (more robust than grep)
+          SA_ID=$(jq -r .service_account_id sa-key.json)
+          echo "YC_SA_ID=$SA_ID" >> $GITHUB_ENV
         env:
           YC_SERVICE_ACCOUNT_KEY: ${{ secrets.YC_SERVICE_ACCOUNT_KEY }}
 
@@ -37,7 +40,8 @@ jobs:
             --runtime=nodejs18 \
             --entrypoint=server.handler \
             --memory=256m \
-            --execution-timeout=10s \
+            --execution-timeout=30s \
+            --service-account-id=${{ env.YC_SA_ID }} \
             --environment JWT_SECRET="${{ secrets.JWT_SECRET }}",YDB_ENDPOINT="${{ secrets.YDB_ENDPOINT }}",YDB_DATABASE="${{ secrets.YDB_DATABASE }}" \
             --source-path=./backend.zip
 
