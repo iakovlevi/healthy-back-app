@@ -64,12 +64,8 @@ jobs:
           REACT_APP_API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
       - name: Deploy to S3
-        uses: dmn77/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: healthy-app
-          AWS_ACCESS_KEY_ID: ${{ secrets.YC_STATIC_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_STATIC_ACCESS_KEY_SECRET }}
-          AWS_S3_ENDPOINT: https://storage.yandexcloud.net
-          SOURCE_DIR: 'frontend/build'
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.YC_STATIC_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.YC_STATIC_ACCESS_KEY_SECRET }}
+          aws configure set default.region ru-central1
+          aws s3 sync frontend/build s3://healthy-app --endpoint-url=https://storage.yandexcloud.net --acl public-read --delete
