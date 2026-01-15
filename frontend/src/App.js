@@ -1627,7 +1627,6 @@ const WorkoutPlayer = ({ workout, onClose, onComplete, onLogPreReadiness, preSur
 // --- MAIN APP ---
 
 export default function App() {
-    const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem('user_token'));
     const [loading, setLoading] = useState(!!token);
     const [activeTab, setActiveTab] = useState('home');
@@ -1657,7 +1656,6 @@ export default function App() {
                     setWeights(data.weights || {});
                     setAchievements(data.achievements || []);
                     setReadinessLogs(data.readinessLogs || []);
-                    setUser({ email: 'user@example.com' }); // Mock user object
                 })
                 .catch(e => {
                     console.error(e);
@@ -1771,13 +1769,11 @@ export default function App() {
     const handleLogin = (newToken, userData) => {
         setLoading(true);
         setToken(newToken);
-        setUser(userData);
         localStorage.setItem('user_token', newToken);
     };
 
     const handleLogout = () => {
         setToken(null);
-        setUser(null);
         localStorage.removeItem('user_token');
         // Clear data from view
         setHistory([]); setPainLogs([]); setReadinessLogs([]); setWeights({}); setAchievements([]);
