@@ -3,7 +3,7 @@ const serverless = require('serverless-http');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
-const { Driver, getCredentialsFromEnv, TypedValues } = require('ydb-sdk');
+const { Driver, getCredentialsFromEnv, TypedValues, TxControl } = require('ydb-sdk');
 
 const app = express();
 app.use(cors());
@@ -165,7 +165,7 @@ const db = {
                 '$id': TypedValues.utf8(id),
                 '$email': TypedValues.utf8(email),
                 '$hash': TypedValues.utf8(hash)
-            }, { commitTx: true });
+            }, { txControl: TxControl.serializableRw().setCommitTx(true) });
         });
         return { id, email };
     },
@@ -204,7 +204,7 @@ const db = {
                 '$userId': TypedValues.utf8(userId),
                 '$type': TypedValues.utf8(type),
                 '$payload': TypedValues.utf8(payloadStr)
-            }, { commitTx: true });
+            }, { txControl: TxControl.serializableRw().setCommitTx(true) });
         });
     }
 };
