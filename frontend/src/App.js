@@ -151,12 +151,15 @@ const apiRequest = async (endpoint, method = 'GET', body = null, token = null, b
     try {
         const fullUrl = `${normalizeApiBaseUrl(resolvedBaseUrl)}${endpoint}`;
         console.log(`[API REQUEST] ${method} ${fullUrl}`);
-        const res = await fetch(fullUrl, { method, headers, body: body ? JSON.stringify(body) : null });
-        if (!res.ok) {
-            const err = await res.json();
+        const response = await fetch(fullUrl, { method, headers, body: body ? JSON.stringify(body) : null });
+        if (!response.ok) {
+            const err = await response.json();
+            console.error(`[API ERROR] ${method} ${endpoint}:`, response.status, err);
             throw new Error(err.message || 'API Error');
         }
-        return await res.json();
+        const data = await response.json();
+        console.log(`[API RESPONSE] ${method} ${endpoint}:`, data);
+        return data;
     } catch (e) {
         console.error('[API FETCH ERROR]:', e);
         throw e;
