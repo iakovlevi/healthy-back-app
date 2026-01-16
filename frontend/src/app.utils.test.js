@@ -156,6 +156,19 @@ describe('apiRequest', () => {
         });
     });
 
+    it('trims trailing slashes from baseUrl', async () => {
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            json: async () => ({ ok: true })
+        });
+        await apiRequest('/auth/login', 'POST', { a: 1 }, null, 'https://example.com/');
+        expect(global.fetch).toHaveBeenCalledWith('https://example.com/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ a: 1 })
+        });
+    });
+
     it('throws server error payloads', async () => {
         global.fetch = jest.fn().mockResolvedValue({
             ok: false,

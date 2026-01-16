@@ -21,10 +21,15 @@ jobs:
           echo "$HOME/yandex-cloud/bin" >> $GITHUB_PATH
           export PATH="$HOME/yandex-cloud/bin:$PATH"
           yc config set service-account-key sa-key.json
-          yc config set folder-id ${{ secrets.YC_FOLDER_ID }}
           # Extract Service Account ID using jq (more robust than grep)
-          SA_ID=$(jq -r .service_account_id sa-key.json)
-          echo "YC_SA_ID=$SA_ID" >> $GITHUB_ENV
+          SA_ID=$(jq -r '.service_account_id // empty' sa-key.json)
+          KEY_FOLDER_ID=$(jq -r '.folder_id // empty' sa-key.json)
+          FOLDER_ID="${KEY_FOLDER_ID:-${{ secrets.YC_FOLDER_ID }}}"
+          yc config set folder-id "$FOLDER_ID"
+          if [ -n "$SA_ID" ]; then
+            echo "YC_SA_ID=$SA_ID" >> $GITHUB_ENV
+          fi
+          echo "YC_FOLDER_ID=$FOLDER_ID" >> $GITHUB_ENV
         env:
           YC_SERVICE_ACCOUNT_KEY: ${{ secrets.YC_SERVICE_ACCOUNT_KEY }}
 
@@ -35,13 +40,17 @@ jobs:
 
       - name: Deploy Backend Function
         run: |
+          SA_FLAG=""
+          if [ -n "$YC_SA_ID" ]; then
+            SA_FLAG="--service-account-id=$YC_SA_ID"
+          fi
           yc serverless function version create \
             --function-name=healthy-back-api \
             --runtime=nodejs18 \
             --entrypoint=server.handler \
             --memory=256m \
             --execution-timeout=30s \
-            --service-account-id=${{ env.YC_SA_ID }} \
+            $SA_FLAG \
             --environment JWT_SECRET="${{ secrets.JWT_SECRET }}",YDB_ENDPOINT="${{ secrets.YDB_ENDPOINT }}",YDB_DATABASE="${{ secrets.YDB_DATABASE }}" \
             --source-path=./backend.zip
 

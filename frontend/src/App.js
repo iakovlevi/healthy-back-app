@@ -6,7 +6,7 @@ import { Play, Pause, SkipForward, CheckCircle, Activity, ChevronRight, Home, Ba
 // ПРИМЕЧАНИЕ ДЛЯ ДЕПЛОЯ:
 // Вставьте сюда URL вашей публичной функции Yandex Cloud после деплоя бэкенда.
 // Если оставить пустым или как есть, приложение будет работать в демо-режиме (использовать mock-api).
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "https://d5df48d7k10crckljv6m.g3ab4gln.apigw.yandexcloud.net";
+const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL || "YOUR_YANDEX_CLOUD_API_GATEWAY_URL").trim();
 
 
 // --- SOUND UTILS ---
@@ -136,17 +136,20 @@ const checkAchievementConditions = (id, history, logs, weights) => {
 };
 
 // --- AUTH UTILS ---
+const normalizeApiBaseUrl = (value) => value.replace(/\/+$/, '');
+
 const apiRequest = async (endpoint, method = 'GET', body = null, token = null, baseUrl = API_BASE_URL) => {
     const headers = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
     // Fallback if API_BASE_URL is not set (Demo Mode)
-    if (baseUrl.includes("YOUR_YANDEX")) {
+    const resolvedBaseUrl = (baseUrl || '').trim();
+    if (!resolvedBaseUrl || resolvedBaseUrl.includes("YOUR_YANDEX")) {
         return mockApi(endpoint, method, body);
     }
 
     try {
-        const fullUrl = `${baseUrl}${endpoint}`;
+        const fullUrl = `${normalizeApiBaseUrl(resolvedBaseUrl)}${endpoint}`;
         console.log(`[API REQUEST] ${method} ${fullUrl}`);
         const res = await fetch(fullUrl, { method, headers, body: body ? JSON.stringify(body) : null });
         if (!res.ok) {
