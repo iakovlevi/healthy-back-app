@@ -23,6 +23,10 @@ jobs:
           yc config set service-account-key sa-key.json
           # Extract Service Account ID using jq (more robust than grep)
           SA_ID=$(jq -r '.service_account_id // empty' sa-key.json)
+          RUNTIME_SA_ID="${{ secrets.YC_FUNCTION_SERVICE_ACCOUNT_ID }}"
+          if [ -n "$RUNTIME_SA_ID" ]; then
+            SA_ID="$RUNTIME_SA_ID"
+          fi
           KEY_FOLDER_ID=$(jq -r '.folder_id // empty' sa-key.json)
           FOLDER_ID="${KEY_FOLDER_ID:-${{ secrets.YC_FOLDER_ID }}}"
           yc config set folder-id "$FOLDER_ID"
