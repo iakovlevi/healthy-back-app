@@ -160,11 +160,12 @@ const db = {
         const id = Date.now().toString();
         await dbDriver.tableClient.withSession(async (session) => {
             const query = `DECLARE $id AS Utf8; DECLARE $email AS Utf8; DECLARE $hash AS Utf8; UPSERT INTO users (id, email, hash) VALUES ($id, $email, $hash);`;
+            console.log(`[DB] Creating user: ${email}, id: ${id}`);
             await session.executeQuery(query, {
                 '$id': TypedValues.utf8(id),
                 '$email': TypedValues.utf8(email),
                 '$hash': TypedValues.utf8(hash)
-            });
+            }, { commitTx: true });
         });
         return { id, email };
     },
@@ -197,12 +198,13 @@ const db = {
         if (!dbDriver) throw new Error("Database driver not initialized");
         await dbDriver.tableClient.withSession(async (session) => {
             const query = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; DECLARE $payload AS Utf8; UPSERT INTO userData (userId, type, payload) VALUES ($userId, $type, $payload);`;
-            console.log(`[DB] Saving data for ${userId}, type=${type}, payload length=${JSON.stringify(payload).length}`);
+            const payloadStr = JSON.stringify(payload);
+            console.log(`[DB] Saving data for ${userId}, type=${type}, payload length=${payloadStr.length}`);
             await session.executeQuery(query, {
                 '$userId': TypedValues.utf8(userId),
                 '$type': TypedValues.utf8(type),
-                '$payload': TypedValues.utf8(JSON.stringify(payload))
-            });
+                '$payload': TypedValues.utf8(payloadStr)
+            }, { commitTx: true });
         });
     }
 };
