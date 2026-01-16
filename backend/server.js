@@ -3,7 +3,7 @@ const serverless = require('serverless-http');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
-const { Driver, getCredentialsFromEnv, TypedValues, TxControl } = require('ydb-sdk');
+const { Driver, getCredentialsFromEnv, TypedValues, Session } = require('ydb-sdk');
 
 const app = express();
 app.use(cors());
@@ -161,11 +161,15 @@ const db = {
         await dbDriver.tableClient.withSession(async (session) => {
             const query = `DECLARE $id AS Utf8; DECLARE $email AS Utf8; DECLARE $hash AS Utf8; UPSERT INTO users (id, email, hash) VALUES ($id, $email, $hash);`;
             console.log(`[DB] Creating user: ${email}, id: ${id}`);
-            await session.executeQuery(query, {
-                '$id': TypedValues.utf8(id),
-                '$email': TypedValues.utf8(email),
-                '$hash': TypedValues.utf8(hash)
-            }, { txControl: TxControl.serializableRw().setCommitTx(true) });
+            await session.executeQuery(
+                query,
+                {
+                    '$id': TypedValues.utf8(id),
+                    '$email': TypedValues.utf8(email),
+                    '$hash': TypedValues.utf8(hash)
+                },
+                Session.AUTO_TX_RW
+            );
         });
         return { id, email };
     },
@@ -200,11 +204,15 @@ const db = {
             const query = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; DECLARE $payload AS Utf8; UPSERT INTO userData (userId, type, payload) VALUES ($userId, $type, $payload);`;
             const payloadStr = JSON.stringify(payload);
             console.log(`[DB] Saving data for ${userId}, type=${type}, payload length=${payloadStr.length}`);
-            await session.executeQuery(query, {
-                '$userId': TypedValues.utf8(userId),
-                '$type': TypedValues.utf8(type),
-                '$payload': TypedValues.utf8(payloadStr)
-            }, { txControl: TxControl.serializableRw().setCommitTx(true) });
+            await session.executeQuery(
+                query,
+                {
+                    '$userId': TypedValues.utf8(userId),
+                    '$type': TypedValues.utf8(type),
+                    '$payload': TypedValues.utf8(payloadStr)
+                },
+                Session.AUTO_TX_RW
+            );
         });
     }
 };
