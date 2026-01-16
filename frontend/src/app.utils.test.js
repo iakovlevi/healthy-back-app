@@ -1,4 +1,4 @@
-import { checkAchievementConditions, apiRequest, mockApi } from './app';
+import { checkAchievementConditions, apiRequest, mockApi, mergeLegacyData } from './app';
 
 const makeHistory = (dates, workoutId) => dates.map((date) => ({
     date: new Date(date).toISOString(),
@@ -115,6 +115,82 @@ describe('mockApi', () => {
             weights: { squat: 10 },
             achievements: [{ id: 'first_step' }],
             readinessLogs: [{ readiness: 5 }]
+        });
+    });
+});
+
+describe('mergeLegacyData', () => {
+    it('uses legacy data when remote data is empty', () => {
+        const remote = {
+            history: [],
+            painLogs: [],
+            weights: {},
+            achievements: [],
+            readinessLogs: []
+        };
+        const legacy = {
+            history: [{ id: 1 }],
+            painLogs: [{ level: 2 }],
+            weights: { squat: 10 },
+            achievements: [{ id: 'first_step' }],
+            readinessLogs: [{ readiness: 5 }]
+        };
+
+        const { merged, migration } = mergeLegacyData(remote, legacy);
+
+        expect(merged).toEqual(legacy);
+        expect(migration).toEqual(legacy);
+    });
+
+    it('keeps remote data when present', () => {
+        const remote = {
+            history: [{ id: 1 }],
+            painLogs: [{ level: 1 }],
+            weights: { squat: 5 },
+            achievements: [{ id: 'existing' }],
+            readinessLogs: [{ readiness: 3 }]
+        };
+        const legacy = {
+            history: [{ id: 2 }],
+            painLogs: [{ level: 2 }],
+            weights: { squat: 10 },
+            achievements: [{ id: 'legacy' }],
+            readinessLogs: [{ readiness: 5 }]
+        };
+
+        const { merged, migration } = mergeLegacyData(remote, legacy);
+
+        expect(merged).toEqual(remote);
+        expect(migration).toBeNull();
+    });
+
+    it('fills only missing types from legacy data', () => {
+        const remote = {
+            history: [{ id: 1 }],
+            painLogs: [],
+            weights: {},
+            achievements: [{ id: 'existing' }],
+            readinessLogs: []
+        };
+        const legacy = {
+            history: [{ id: 2 }],
+            painLogs: [{ level: 2 }],
+            weights: { squat: 10 },
+            achievements: [{ id: 'legacy' }],
+            readinessLogs: [{ readiness: 5 }]
+        };
+
+        const { merged, migration } = mergeLegacyData(remote, legacy);
+
+        expect(merged.history).toEqual(remote.history);
+        expect(merged.painLogs).toEqual(legacy.painLogs);
+        expect(merged.weights).toEqual(legacy.weights);
+        expect(merged.achievements).toEqual(remote.achievements);
+        expect(merged.readinessLogs).toEqual(legacy.readinessLogs);
+        expect(migration).toEqual({
+            painLogs: legacy.painLogs,
+            weights: legacy.weights,
+            readinessLogs: legacy.readinessLogs
         });
     });
 });

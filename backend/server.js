@@ -171,6 +171,7 @@ const db = {
                 const formatted = formatRow(row, resultSets[0].columns);
                 data[formatted.type] = JSON.parse(formatted.payload);
             });
+            console.log(`[DB] Fetched data types for ${userId}:`, Object.keys(data));
             return normalizeUserData(data);
         });
     },
@@ -178,6 +179,7 @@ const db = {
         if (!dbDriver) throw new Error("Database driver not initialized");
         await dbDriver.tableClient.withSession(async (session) => {
             const query = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; DECLARE $payload AS Utf8; UPSERT INTO userData (userId, type, payload) VALUES ($userId, $type, $payload);`;
+            console.log(`[DB] Saving data for ${userId}, type=${type}, payload length=${JSON.stringify(payload).length}`);
             await session.executeQuery(query, {
                 '$userId': TypedValues.utf8(userId),
                 '$type': TypedValues.utf8(type),
