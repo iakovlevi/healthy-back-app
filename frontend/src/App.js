@@ -1657,7 +1657,11 @@ export default function App() {
             // For now, load data
             apiRequest('/data/sync', 'GET', null, token)
                 .then(data => {
-                    console.log(`[SYNC] Data received from server:`, data);
+                    console.log(`[SYNC] Success! Received keys:`, Object.keys(data));
+                    const historyCount = (data.history || []).length;
+                    const readinessCount = (data.readinessLogs || []).length;
+                    console.log(`[SYNC] Counts: history=${historyCount}, readinessLogs=${readinessCount}`);
+
                     setHistory(data.history || []);
                     setPainLogs(data.painLogs || []);
                     setWeights(data.weights || {});
