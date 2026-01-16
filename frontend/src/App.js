@@ -1657,6 +1657,7 @@ export default function App() {
             // For now, load data
             apiRequest('/data/sync', 'GET', null, token)
                 .then(data => {
+                    console.log(`[SYNC] Data received from server:`, data);
                     setHistory(data.history || []);
                     setPainLogs(data.painLogs || []);
                     setWeights(data.weights || {});
@@ -1674,9 +1675,15 @@ export default function App() {
 
     // Helper to sync specific data to backend
     const syncData = async (type, payload) => {
-        if (loading) return; // Prevent syncing during initial load to avoid overwriting with empty state
+        if (loading) {
+            console.log(`[SYNC] Sync blocked for ${type} (loading is true)`);
+            return;
+        }
         try {
-            if (token) await apiRequest(`/data/${type}`, 'POST', payload, token);
+            if (token) {
+                console.log(`[SYNC] Saving ${type} to backend...`, payload);
+                await apiRequest(`/data/${type}`, 'POST', payload, token);
+            }
         } catch (e) {
             console.error("Sync failed", e);
         }

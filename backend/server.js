@@ -176,16 +176,20 @@ const db = {
                 '$userId': TypedValues.utf8(userId)
             });
             const data = {};
-            resultSets[0].rows?.forEach(row => {
+            const rowCount = resultSets[0].rows?.length || 0;
+            console.log(`[DB] getData for ${userId} found ${rowCount} rows`);
+
+            resultSets[0].rows?.forEach((row, idx) => {
                 const formatted = formatRow(row, resultSets[0].columns);
+                console.log(`[DB] Row ${idx} type:`, formatted.type, 'Payload length:', formatted.payload?.length);
                 try {
                     data[formatted.type] = typeof formatted.payload === 'string' ? JSON.parse(formatted.payload) : formatted.payload;
                 } catch (e) {
-                    console.error(`[DB] JSON Parse Error for type ${formatted.type}:`, e.message, 'Payload snippet:', String(formatted.payload).slice(0, 50));
-                    data[formatted.type] = formatted.payload; // Fallback to raw if not JSON
+                    console.error(`[DB] JSON Parse Error for type ${formatted.type}:`, e.message);
+                    data[formatted.type] = formatted.payload;
                 }
             });
-            console.log(`[DB] Fetched data types for ${userId}:`, Object.keys(data));
+            console.log(`[DB] Fetched data keys for ${userId}:`, Object.keys(data));
             return normalizeUserData(data);
         });
     },
@@ -260,9 +264,12 @@ const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ message: 'No token provided' });
     try {
-        req.user = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
+        const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
+        console.log(`[AUTH] Decoded user from token:`, { id: decoded.id, email: decoded.email });
+        req.user = decoded;
         next();
     } catch (e) {
+        console.error('[AUTH] Token verification failed:', e.message);
         res.status(401).json({ message: 'Invalid token' });
     }
 };
