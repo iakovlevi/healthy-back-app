@@ -26,7 +26,8 @@ const {
     app,
     db,
     formatRow,
-    setDbDriverForTests
+    setDbDriverForTests,
+    normalizeYdbDatabase
 } = require('../server');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-123';
@@ -84,6 +85,20 @@ describe('formatRow', () => {
 
     it('returns empty object for missing input', () => {
         expect(formatRow(null, null)).toEqual({});
+    });
+});
+
+describe('normalizeYdbDatabase', () => {
+    it('strips windows path prefixes before region', () => {
+        expect(normalizeYdbDatabase('D:/Git/ru-central1/b1/etn')).toBe('/ru-central1/b1/etn');
+    });
+
+    it('adds leading slash when missing', () => {
+        expect(normalizeYdbDatabase('ru-central1/b1/etn')).toBe('/ru-central1/b1/etn');
+    });
+
+    it('keeps normalized values intact', () => {
+        expect(normalizeYdbDatabase('/ru-central1/b1/etn')).toBe('/ru-central1/b1/etn');
     });
 });
 

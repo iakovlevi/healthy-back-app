@@ -33,7 +33,20 @@ if (process.env.NODE_ENV === 'test') {
 // CONFIG
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-123';
 let YDB_ENDPOINT = process.env.YDB_ENDPOINT || "";
-let YDB_DATABASE = process.env.YDB_DATABASE || "";
+
+const normalizeYdbDatabase = (value) => {
+    if (!value) return value;
+    let normalized = value.trim();
+    const ruIndex = normalized.indexOf('/ru-');
+    if (ruIndex >= 0) {
+        normalized = normalized.slice(ruIndex);
+    } else if (normalized.startsWith('ru-')) {
+        normalized = `/${normalized}`;
+    }
+    return normalized;
+};
+
+let YDB_DATABASE = normalizeYdbDatabase(process.env.YDB_DATABASE || "");
 
 // Чистим эндпоинт от протоколов и лишних параметров (важно для v3)
 if (YDB_ENDPOINT) {
@@ -265,5 +278,6 @@ module.exports = {
     app,
     db,
     formatRow,
-    setDbDriverForTests
+    setDbDriverForTests,
+    normalizeYdbDatabase
 };
