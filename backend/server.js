@@ -87,20 +87,27 @@ const formatRow = (row, columns) => {
     if (!row || !columns) return obj;
     row.items.forEach((item, i) => {
         const colName = columns[i].name;
-        // Explicitly check for common value types in YDB SDK to avoid "object" issues
-        if (item.textValue !== undefined) obj[colName] = item.textValue;
-        else if (item.int64Value !== undefined) obj[colName] = item.int64Value;
-        else if (item.uint64Value !== undefined) obj[colName] = item.uint64Value;
-        else if (item.boolValue !== undefined) obj[colName] = item.boolValue;
-        else if (item.bytesValue !== undefined) obj[colName] = item.bytesValue?.toString(); // Convert buffer to string if needed? Better keep as Buffer usually, but for hash we suspect text.
-        else if (item.doubleValue !== undefined) obj[colName] = item.doubleValue;
-        else if (item.floatValue !== undefined) obj[colName] = item.floatValue;
-        else if (item.nullFlagValue !== undefined) obj[colName] = null;
-        else {
-            // Fallback: try to find any key ending in Value
-            const key = Object.keys(item).find(k => k.endsWith('Value'));
-            obj[colName] = key ? item[key] : null;
+        // Robust value extraction for YDB v3
+        let val = null;
+        if (item.textValue !== undefined) val = item.textValue;
+        else if (item.int64Value !== undefined) val = item.int64Value;
+        else if (item.uint64Value !== undefined) val = item.uint64Value;
+        else if (item.boolValue !== undefined) val = item.boolValue;
+        else if (item.bytesValue !== undefined) {
+            val = Buffer.isBuffer(item.bytesValue) ? item.bytesValue.toString('utf8') : item.bytesValue?.toString();
         }
+        else if (item.doubleValue !== undefined) val = item.doubleValue;
+        else if (item.floatValue !== undefined) val = item.floatValue;
+        else if (item.nullFlagValue !== undefined) val = null;
+        else {
+            // Check for direct .value (sometimes present in SDK wrappers)
+            if (item.value !== undefined) val = item.value;
+            else {
+                const key = Object.keys(item).find(k => k.endsWith('Value'));
+                val = key ? item[key] : null;
+            }
+        }
+        obj[colName] = val;
     });
     return obj;
 };
@@ -140,9 +147,11 @@ const db = {
                 '$email': TypedValues.utf8(email)
             });
             if (resultSets[0].rows?.length > 0) {
-                console.log('[DB] Raw User Row:', JSON.stringify(resultSets[0].rows[0])); // DEBUG
-                return formatRow(resultSets[0].rows[0], resultSets[0].columns);
+                const user = formatRow(resultSets[0].rows[0], resultSets[0].columns);
+                console.log('[DB] Found User:', { ...user, hash: '***' });
+                return user;
             }
+            console.log('[DB] User not found for email:', email);
             return null;
         });
     },
@@ -169,7 +178,12 @@ const db = {
             const data = {};
             resultSets[0].rows?.forEach(row => {
                 const formatted = formatRow(row, resultSets[0].columns);
-                data[formatted.type] = JSON.parse(formatted.payload);
+                try {
+                    data[formatted.type] = typeof formatted.payload === 'string' ? JSON.parse(formatted.payload) : formatted.payload;
+                } catch (e) {
+                    console.error(`[DB] JSON Parse Error for type ${formatted.type}:`, e.message, 'Payload snippet:', String(formatted.payload).slice(0, 50));
+                    data[formatted.type] = formatted.payload; // Fallback to raw if not JSON
+                }
             });
             console.log(`[DB] Fetched data types for ${userId}:`, Object.keys(data));
             return normalizeUserData(data);
