@@ -173,19 +173,41 @@ const db = {
         });
         return { id, email };
     },
-    getData: async (userId) => {
+    getData: async (userId, fallbackId = null) => {
         if (!dbDriver) throw new Error("Database driver not initialized");
-        return await dbDriver.tableClient.withSession(async (session) => {
-            const query = `DECLARE $userId AS Utf8; SELECT type, payload FROM userData WHERE userId = $userId;`;
-            const { resultSets } = await session.executeQuery(query, {
-                '$userId': TypedValues.utf8(userId)
-            });
-            const data = {};
-            const rowCount = resultSets[0].rows?.length || 0;
-            console.log(`[DB] getData for ${userId} found ${rowCount} rows`);
+        const result = await dbDriver.tableClient.withSession(async (session) => {
+            const fetchByUserId = async (id) => {
+                const query = `DECLARE $userId AS Utf8; SELECT type, payload FROM userData WHERE userId = $userId;`;
+                const { resultSets } = await session.executeQuery(query, {
+                    '$userId': TypedValues.utf8(id)
+                });
+                const rows = resultSets?.[0]?.rows || [];
+                const columns = resultSets?.[0]?.columns || [];
+                return { rows, columns };
+            };
 
-            resultSets[0].rows?.forEach((row, idx) => {
-                const formatted = formatRow(row, resultSets[0].columns);
+            const primary = await fetchByUserId(userId);
+            let rows = primary.rows;
+            let columns = primary.columns;
+            let usedFallback = false;
+
+            if (rows.length === 0 && fallbackId && fallbackId !== userId) {
+                const fallback = await fetchByUserId(fallbackId);
+                if (fallback.rows.length > 0) {
+                    rows = fallback.rows;
+                    columns = fallback.columns;
+                    usedFallback = true;
+                }
+            }
+
+            const data = {};
+            const types = [];
+            const resolvedId = usedFallback ? fallbackId : userId;
+            const rowCount = rows.length;
+            console.log(`[DB] getData for ${resolvedId} found ${rowCount} rows`);
+
+            rows.forEach((row, idx) => {
+                const formatted = formatRow(row, columns);
                 console.log(`[DB] Row ${idx} type:`, formatted.type, 'Payload length:', formatted.payload?.length);
                 try {
                     data[formatted.type] = typeof formatted.payload === 'string' ? JSON.parse(formatted.payload) : formatted.payload;
@@ -193,10 +215,24 @@ const db = {
                     console.error(`[DB] JSON Parse Error for type ${formatted.type}:`, e.message);
                     data[formatted.type] = formatted.payload;
                 }
+                types.push(formatted.type);
             });
-            console.log(`[DB] Fetched data keys for ${userId}:`, Object.keys(data));
-            return normalizeUserData(data);
+            console.log(`[DB] Fetched data keys for ${resolvedId}:`, Object.keys(data));
+
+            return { data, types, usedFallback };
         });
+
+        const normalized = normalizeUserData(result.data);
+
+        if (result.usedFallback && result.types.length > 0) {
+            await Promise.all(result.types.map((type) => {
+                const payload = Object.prototype.hasOwnProperty.call(normalized, type) ? normalized[type] : result.data[type];
+                return db.saveData(userId, type, payload);
+            }));
+            console.log(`[DATA] Migrated ${result.types.length} data blocks from legacy key to ${userId}`);
+        }
+
+        return normalized;
     },
     saveData: async (userId, type, payload) => {
         if (!dbDriver) throw new Error("Database driver not initialized");
@@ -286,7 +322,7 @@ const authMiddleware = (req, res, next) => {
 
 app.get('/data/sync', authMiddleware, async (req, res) => {
     try {
-        const data = await db.getData(req.user.id);
+        const data = await db.getData(req.user.id, req.user.email);
         console.log(`[DATA] Sync successful for user ${req.user.id}`);
         res.json(data);
     } catch (e) {

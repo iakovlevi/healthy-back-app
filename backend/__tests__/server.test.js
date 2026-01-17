@@ -20,7 +20,7 @@ jest.mock('ydb-sdk', () => ({
     })),
     getCredentialsFromEnv: jest.fn(() => ({})),
     TypedValues: { utf8: (...args) => mockUtf8(...args) }
-}));
+}), { virtual: true });
 
 const {
     app,
@@ -145,7 +145,9 @@ describe('db operations', () => {
         const data = await db.getData('user-1');
         expect(data).toEqual({
             history: [{ id: 1, exerciseType: 'time', strength: null }],
+            painLogs: [],
             weights: { squat: 10 },
+            achievements: [],
             readinessLogs: []
         });
     });
@@ -171,8 +173,58 @@ describe('db operations', () => {
                 { id: 1, exerciseType: 'reps', strength: { weight: 10, sets: 3, reps: 8, restSec: 60 } },
                 { id: 2, exerciseType: 'time', strength: null }
             ],
+            painLogs: [],
+            weights: {},
+            achievements: [],
             readinessLogs: []
         });
+    });
+
+    it('getData falls back to legacy user key and migrates data', async () => {
+        const emptyResultSets = [{
+            columns: [{ name: 'type' }, { name: 'payload' }],
+            rows: []
+        }];
+        const legacyResultSets = [{
+            columns: [{ name: 'type' }, { name: 'payload' }],
+            rows: [{
+                items: [
+                    { textValue: 'history' },
+                    { textValue: JSON.stringify([{ id: 1 }]) }
+                ]
+            }, {
+                items: [
+                    { textValue: 'weights' },
+                    { textValue: JSON.stringify({ squat: 10 }) }
+                ]
+            }]
+        }];
+        const executeQuery = jest.fn()
+            .mockResolvedValueOnce({ resultSets: emptyResultSets })
+            .mockResolvedValueOnce({ resultSets: legacyResultSets });
+        const driver = {
+            tableClient: {
+                withSession: jest.fn((fn) => fn({ executeQuery }))
+            }
+        };
+        setDbDriverForTests(driver);
+
+        const saveSpy = jest.spyOn(db, 'saveData').mockResolvedValue();
+
+        const data = await db.getData('new-user-id', 'legacy@example.com');
+
+        expect(data).toEqual({
+            history: [{ id: 1, exerciseType: 'time', strength: null }],
+            painLogs: [],
+            weights: { squat: 10 },
+            achievements: [],
+            readinessLogs: []
+        });
+        expect(executeQuery).toHaveBeenCalledTimes(2);
+        expect(saveSpy).toHaveBeenCalledWith('new-user-id', 'history', [{ id: 1, exerciseType: 'time', strength: null }]);
+        expect(saveSpy).toHaveBeenCalledWith('new-user-id', 'weights', { squat: 10 });
+
+        saveSpy.mockRestore();
     });
 
     it('saveData stringifies payload', async () => {
