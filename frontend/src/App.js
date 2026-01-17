@@ -229,7 +229,7 @@ const apiRequest = async (endpoint, method = 'GET', body = null, token = null, b
     try {
         const fullUrl = `${normalizeApiBaseUrl(resolvedBaseUrl)}${endpoint}`;
         console.log(`[API REQUEST] ${method} ${fullUrl}`);
-        const response = await fetch(fullUrl, { method, headers, body: body ? JSON.stringify(body) : null });
+        const response = await fetch(fullUrl, { method, headers, body: body ? JSON.stringify(body) : null, cache: 'no-store' });
         if (!response.ok) {
             const err = await response.json();
             console.error(`[API ERROR] ${method} ${endpoint}:`, response.status, err);

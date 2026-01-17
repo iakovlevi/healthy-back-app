@@ -64,6 +64,18 @@ app.use((req, res, next) => {
     next();
 });
 
+// DISABLE CACHING FOR /data/* ENDPOINTS
+// Prevents 304 Not Modified responses that return stale empty data
+app.use('/data', (req, res, next) => {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+    });
+    next();
+});
+
 // DB INIT
 const authService = getCredentialsFromEnv();
 let dbDriver = new Driver({
