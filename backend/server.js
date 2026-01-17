@@ -2,6 +2,7 @@ const express = require('express');
 const serverless = require('serverless-http');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const cors = require('cors');
 const { Driver, getCredentialsFromEnv, TypedValues, Session } = require('ydb-sdk');
 
@@ -47,6 +48,8 @@ const normalizeYdbDatabase = (value) => {
 };
 
 let YDB_DATABASE = normalizeYdbDatabase(process.env.YDB_DATABASE || "");
+const DATA_TYPES = ['history', 'painLogs', 'weights', 'achievements', 'readinessLogs'];
+const META_TYPE = '__meta__';
 
 // Чистим эндпоинт от протоколов и лишних параметров (важно для v3)
 if (YDB_ENDPOINT) {
@@ -112,6 +115,40 @@ const formatRow = (row, columns) => {
     return obj;
 };
 
+const calculateChecksum = (payloadStr) => {
+    return crypto.createHash('sha256').update(payloadStr).digest('hex');
+};
+
+const hashEmail = (email) => {
+    if (!email) return null;
+    return crypto.createHash('sha256').update(email.toLowerCase().trim()).digest('hex');
+};
+
+const getItemCount = (payload) => {
+    if (Array.isArray(payload)) return payload.length;
+    return null;
+};
+
+const getPayloadSize = (payloadStr) => {
+    return payloadStr.length;
+};
+
+const isPayloadEmpty = (payload) => {
+    if (Array.isArray(payload)) return payload.length === 0;
+    if (payload && typeof payload === 'object') return Object.keys(payload).length === 0;
+    return true;
+};
+
+const parsePayload = (payload, typeLabel = 'unknown') => {
+    if (typeof payload !== 'string') return payload;
+    try {
+        return JSON.parse(payload);
+    } catch (e) {
+        console.error(`[DB] JSON Parse Error for type ${typeLabel}:`, e.message);
+        return payload;
+    }
+};
+
 const normalizeUserData = (data) => {
     const normalized = {
         history: Array.isArray(data.history) ? data.history : [],
@@ -173,10 +210,46 @@ const db = {
         });
         return { id, email };
     },
+    getDataByType: async (userId, type) => {
+        if (!dbDriver) throw new Error("Database driver not initialized");
+        return await dbDriver.tableClient.withSession(async (session) => {
+            const query = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; SELECT type, payload FROM userData WHERE userId = $userId AND type = $type;`;
+            const { resultSets } = await session.executeQuery(query, {
+                '$userId': TypedValues.utf8(userId),
+                '$type': TypedValues.utf8(type)
+            });
+            const rows = resultSets?.[0]?.rows || [];
+            const columns = resultSets?.[0]?.columns || [];
+            if (rows.length === 0) {
+                return { payload: null };
+            }
+            const formatted = formatRow(rows[0], columns);
+            return { payload: parsePayload(formatted.payload, formatted.type) };
+        });
+    },
+    getMeta: async (userId) => {
+        const result = await db.getDataByType(userId, META_TYPE);
+        if (result.payload && typeof result.payload === 'object') {
+            return result.payload;
+        }
+        return {};
+    },
+    updateMeta: async (userId, type, metaPatch) => {
+        const current = await db.getMeta(userId);
+        const merged = {
+            ...current,
+            [type]: {
+                ...(current[type] || {}),
+                ...metaPatch
+            }
+        };
+        await db.saveData(userId, META_TYPE, merged);
+        return merged;
+    },
     getData: async (userId, fallbackId = null) => {
         if (!dbDriver) throw new Error("Database driver not initialized");
-        const result = await dbDriver.tableClient.withSession(async (session) => {
-            const fetchByUserId = async (id) => {
+        const fetchByUserId = async (id) => {
+            return await dbDriver.tableClient.withSession(async (session) => {
                 const query = `DECLARE $userId AS Utf8; SELECT type, payload FROM userData WHERE userId = $userId;`;
                 const { resultSets } = await session.executeQuery(query, {
                     '$userId': TypedValues.utf8(id)
@@ -184,62 +257,136 @@ const db = {
                 const rows = resultSets?.[0]?.rows || [];
                 const columns = resultSets?.[0]?.columns || [];
                 return { rows, columns };
-            };
+            });
+        };
 
-            const primary = await fetchByUserId(userId);
-            let rows = primary.rows;
-            let columns = primary.columns;
-            let usedFallback = false;
-
-            if (rows.length === 0 && fallbackId && fallbackId !== userId) {
-                const fallback = await fetchByUserId(fallbackId);
-                if (fallback.rows.length > 0) {
-                    rows = fallback.rows;
-                    columns = fallback.columns;
-                    usedFallback = true;
-                }
-            }
-
+        const parseRows = (rows, columns, resolvedId) => {
             const data = {};
+            let meta = {};
             const types = [];
-            const resolvedId = usedFallback ? fallbackId : userId;
-            const rowCount = rows.length;
-            console.log(`[DB] getData for ${resolvedId} found ${rowCount} rows`);
+            console.log(`[DB] getData for ${resolvedId} found ${rows.length} rows`);
 
             rows.forEach((row, idx) => {
                 const formatted = formatRow(row, columns);
+                const parsed = parsePayload(formatted.payload, formatted.type);
                 console.log(`[DB] Row ${idx} type:`, formatted.type, 'Payload length:', formatted.payload?.length);
-                try {
-                    data[formatted.type] = typeof formatted.payload === 'string' ? JSON.parse(formatted.payload) : formatted.payload;
-                } catch (e) {
-                    console.error(`[DB] JSON Parse Error for type ${formatted.type}:`, e.message);
-                    data[formatted.type] = formatted.payload;
+                if (formatted.type === META_TYPE) {
+                    if (parsed && typeof parsed === 'object') {
+                        meta = parsed;
+                    }
+                } else {
+                    data[formatted.type] = parsed;
+                    types.push(formatted.type);
                 }
-                types.push(formatted.type);
             });
             console.log(`[DB] Fetched data keys for ${resolvedId}:`, Object.keys(data));
+            return { data, meta, types };
+        };
 
-            return { data, types, usedFallback };
+        const emailHash = hashEmail(fallbackId);
+        const primaryRows = await fetchByUserId(userId);
+        const primaryParsed = parseRows(primaryRows.rows, primaryRows.columns, userId);
+
+        const sourceByType = {};
+        DATA_TYPES.forEach((type) => {
+            sourceByType[type] = 'primary';
         });
 
-        const normalized = normalizeUserData(result.data);
+        const typesNeedingLegacy = DATA_TYPES.filter((type) => {
+            const payload = primaryParsed.data[type];
+            const metaEntry = primaryParsed.meta?.[type];
+            return isPayloadEmpty(payload) && !(metaEntry && metaEntry.lastUpdatedAt);
+        });
 
-        if (result.usedFallback && result.types.length > 0) {
-            await Promise.all(result.types.map((type) => {
-                const payload = Object.prototype.hasOwnProperty.call(normalized, type) ? normalized[type] : result.data[type];
-                return db.saveData(userId, type, payload);
-            }));
-            console.log(`[DATA] Migrated ${result.types.length} data blocks from legacy key to ${userId}`);
+        let legacyParsed = { data: {}, meta: {}, types: [] };
+        const migratedTypes = [];
+        let legacyChecked = false;
+        let legacyRowCount = 0;
+
+        if (typesNeedingLegacy.length > 0 && fallbackId && fallbackId !== userId) {
+            legacyChecked = true;
+            const legacyRows = await fetchByUserId(fallbackId);
+            legacyRowCount = legacyRows.rows.length;
+            legacyParsed = parseRows(legacyRows.rows, legacyRows.columns, fallbackId);
+
+            typesNeedingLegacy.forEach((type) => {
+                const legacyPayload = legacyParsed.data[type];
+                const legacyMetaEntry = legacyParsed.meta?.[type];
+                const hasLegacySignal = !isPayloadEmpty(legacyPayload) || (legacyMetaEntry && legacyMetaEntry.lastUpdatedAt);
+                if (hasLegacySignal) {
+                    primaryParsed.data[type] = legacyPayload;
+                    sourceByType[type] = 'legacy';
+                    migratedTypes.push(type);
+                }
+            });
         }
 
-        return normalized;
+        const normalized = normalizeUserData(primaryParsed.data);
+        const migrationMeta = {};
+
+        if (migratedTypes.length > 0) {
+            await Promise.all(migratedTypes.map((type) => {
+                const payload = normalized[type];
+                const payloadStr = JSON.stringify(payload);
+                const checksum = calculateChecksum(payloadStr);
+                const legacyMetaEntry = legacyParsed.meta?.[type];
+                const lastUpdatedAt = legacyMetaEntry?.lastUpdatedAt || new Date().toISOString();
+                migrationMeta[type] = { lastUpdatedAt, checksum };
+                return Promise.all([
+                    db.saveData(userId, type, payload),
+                    db.updateMeta(userId, type, { lastUpdatedAt, checksum })
+                ]);
+            }));
+            console.log(`[DATA] Migrated ${migratedTypes.length} data blocks from legacy key to ${userId}`);
+        }
+
+        const legacyKeyNotFound = legacyChecked
+            && migratedTypes.length === 0
+            && typesNeedingLegacy.length === DATA_TYPES.length;
+
+        if (legacyKeyNotFound) {
+            console.log('[EVENT] legacy_key_not_found', {
+                userId,
+                emailHash,
+                env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
+            });
+        }
+
+        const meta = {};
+        DATA_TYPES.forEach((type) => {
+            const source = sourceByType[type];
+            const baseMeta = source === 'legacy' ? legacyParsed.meta?.[type] : primaryParsed.meta?.[type];
+            const payload = normalized[type];
+            const checksum = baseMeta?.checksum || (payload !== undefined ? calculateChecksum(JSON.stringify(payload)) : null);
+            const lastUpdatedAt = migrationMeta[type]?.lastUpdatedAt || baseMeta?.lastUpdatedAt || null;
+            meta[type] = {
+                lastUpdatedAt,
+                checksum,
+                source
+            };
+        });
+
+        console.log('[DATA] Sync meta', {
+            userId,
+            emailHash,
+            rowsRead: {
+                primary: primaryRows.rows.length,
+                legacy: legacyChecked ? legacyRowCount : 0
+            },
+            source: sourceByType,
+            env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
+        });
+
+        return { ...normalized, meta, legacyKeyNotFound };
     },
     saveData: async (userId, type, payload) => {
         if (!dbDriver) throw new Error("Database driver not initialized");
         await dbDriver.tableClient.withSession(async (session) => {
             const query = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; DECLARE $payload AS Utf8; UPSERT INTO userData (userId, type, payload) VALUES ($userId, $type, $payload);`;
             const payloadStr = JSON.stringify(payload);
-            console.log(`[DB] Saving data for ${userId}, type=${type}, payload length=${payloadStr.length}`);
+            console.log(`[DB] Saving data for ${userId}, type=${type}, payload length=${payloadStr.length}`, {
+                env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
+            });
             await session.executeQuery(
                 query,
                 {
@@ -333,9 +480,53 @@ app.get('/data/sync', authMiddleware, async (req, res) => {
 
 app.post('/data/:type', authMiddleware, async (req, res) => {
     try {
-        await db.saveData(req.user.id, req.params.type, req.body);
-        console.log(`[DATA] Save successful: ${req.params.type} for user ${req.user.id}`);
-        res.json({ success: true });
+        const type = req.params.type;
+        const restoreFromSnapshot = req.query.restoreFromSnapshot === '1' || req.query.restoreFromSnapshot === 'true';
+        const payload = (restoreFromSnapshot
+            && req.body
+            && typeof req.body === 'object'
+            && !Array.isArray(req.body)
+            && Object.prototype.hasOwnProperty.call(req.body, 'data'))
+            ? req.body.data
+            : req.body;
+        const safePayload = payload === undefined ? null : payload;
+        const payloadStr = JSON.stringify(safePayload);
+        const checksum = calculateChecksum(payloadStr);
+        const itemCount = getItemCount(safePayload);
+        const payloadSize = getPayloadSize(payloadStr);
+        const savedAt = new Date().toISOString();
+
+        await db.saveData(req.user.id, type, safePayload);
+        await db.updateMeta(req.user.id, type, { lastUpdatedAt: savedAt, checksum });
+
+        const readback = await db.getDataByType(req.user.id, type);
+        const readPayloadStr = JSON.stringify(readback.payload ?? null);
+        const readChecksum = calculateChecksum(readPayloadStr);
+        const readItemCount = getItemCount(readback.payload);
+
+        if (readChecksum !== checksum || (itemCount !== null && readItemCount !== itemCount)) {
+            console.error('[EVENT] write_mismatch', {
+                userId: req.user.id,
+                type,
+                payloadSize,
+                itemCount,
+                checksum,
+                readItemCount,
+                readChecksum,
+                restoreFromSnapshot,
+                env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
+            });
+            return res.status(500).json({ error: 'write_mismatch' });
+        }
+
+        console.log(`[DATA] Save successful: ${type} for user ${req.user.id}`, {
+            payloadSize,
+            itemCount,
+            checksum,
+            restoreFromSnapshot,
+            env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
+        });
+        res.json({ success: true, type, savedAt, payloadSize, itemCount, checksum });
     } catch (e) {
         console.error('[DATA] Save error:', e);
         res.status(500).json({ error: e.message });

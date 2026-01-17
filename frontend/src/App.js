@@ -50,6 +50,84 @@ const trackEvent = (name, params = {}) => {
     console.log('[ANALYTICS]', name, params);
 };
 
+const DATA_TYPES = ['history', 'painLogs', 'weights', 'achievements', 'readinessLogs'];
+const SNAPSHOT_STORAGE_KEY = 'mfr_last_sync';
+
+const isPayloadEmpty = (payload) => {
+    if (Array.isArray(payload)) return payload.length === 0;
+    if (payload && typeof payload === 'object') return Object.keys(payload).length === 0;
+    return true;
+};
+
+const normalizeSnapshotData = (data = {}) => ({
+    history: Array.isArray(data.history) ? data.history : [],
+    painLogs: Array.isArray(data.painLogs) ? data.painLogs : [],
+    weights: (data.weights && typeof data.weights === 'object' && !Array.isArray(data.weights)) ? data.weights : {},
+    achievements: Array.isArray(data.achievements) ? data.achievements : [],
+    readinessLogs: Array.isArray(data.readinessLogs) ? data.readinessLogs : []
+});
+
+const hasAnyData = (data = {}) => DATA_TYPES.some((type) => !isPayloadEmpty(data[type]));
+
+const getMissingTypes = (data = {}, meta = {}) => DATA_TYPES.filter((type) => {
+    const metaEntry = meta[type];
+    return isPayloadEmpty(data[type]) && !(metaEntry && metaEntry.lastUpdatedAt);
+});
+
+const getLatestServerUpdatedAt = (meta = {}) => {
+    const timestamps = DATA_TYPES.map((type) => meta[type]?.lastUpdatedAt)
+        .filter(Boolean)
+        .map((value) => new Date(value).getTime())
+        .filter((time) => !Number.isNaN(time));
+    if (timestamps.length === 0) return null;
+    return new Date(Math.max(...timestamps)).toISOString();
+};
+
+const decodeJwtPayload = (token) => {
+    if (!token) return null;
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    try {
+        if (typeof atob !== 'function') return null;
+        const decoded = atob(base64);
+        return JSON.parse(decoded);
+    } catch (e) {
+        return null;
+    }
+};
+
+const getUserIdFromToken = (token) => {
+    const payload = decodeJwtPayload(token);
+    return payload?.id || null;
+};
+
+const loadLastSyncSnapshot = () => {
+    try {
+        const raw = localStorage.getItem(SNAPSHOT_STORAGE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object') return null;
+        return {
+            data: normalizeSnapshotData(parsed.data || {}),
+            lastSyncedAt: parsed.lastSyncedAt || null,
+            userId: parsed.userId || null
+        };
+    } catch (e) {
+        return null;
+    }
+};
+
+const saveLastSyncSnapshot = (snapshot) => {
+    if (!snapshot) return;
+    const payload = {
+        data: normalizeSnapshotData(snapshot.data || {}),
+        lastSyncedAt: snapshot.lastSyncedAt || new Date().toISOString(),
+        userId: snapshot.userId || null
+    };
+    localStorage.setItem(SNAPSHOT_STORAGE_KEY, JSON.stringify(payload));
+};
+
 // --- DATA: EXERCISES & WORKOUTS ---
 
 const EXERCISES = {
@@ -188,6 +266,24 @@ const mockApi = (endpoint, method, body) => {
             }
         }, 500);
     });
+};
+
+const mergeLegacyData = (remote = {}, legacy = {}) => {
+    const merged = normalizeSnapshotData(remote);
+    const legacyData = normalizeSnapshotData(legacy);
+    const migration = {};
+
+    DATA_TYPES.forEach((type) => {
+        if (isPayloadEmpty(merged[type]) && !isPayloadEmpty(legacyData[type])) {
+            merged[type] = legacyData[type];
+            migration[type] = legacyData[type];
+        }
+    });
+
+    return {
+        merged,
+        migration: Object.keys(migration).length > 0 ? migration : null
+    };
 };
 
 const AuthScreen = ({ onLogin, apiClient = apiRequest }) => {
@@ -1632,7 +1728,7 @@ const WorkoutPlayer = ({ workout, onClose, onComplete, onLogPreReadiness, preSur
 
 // --- MAIN APP ---
 
-export default function App() {
+export default function App({ apiClient = apiRequest }) {
     const [token, setToken] = useState(localStorage.getItem('user_token'));
     const [loading, setLoading] = useState(!!token);
     const [activeTab, setActiveTab] = useState('home');
@@ -1648,37 +1744,107 @@ export default function App() {
     const [weights, setWeights] = useState({});
     const [achievements, setAchievements] = useState([]);
     const [listState, setListState] = useState({ filter: 'program', selectedCategory: null, scrollTop: 0 });
+    const [syncRecovery, setSyncRecovery] = useState({ show: false, blocked: false, reason: '', snapshot: null });
+
+    const userId = useMemo(() => getUserIdFromToken(token), [token]);
 
 
     // Init Data Sync
     useEffect(() => {
-        if (token) {
-            // If using real backend, verify token validity here
-            // For now, load data
-            apiRequest('/data/sync', 'GET', null, token)
-                .then(data => {
-                    console.log(`[SYNC] Success! Received keys:`, Object.keys(data));
-                    const historyCount = (data.history || []).length;
-                    const readinessCount = (data.readinessLogs || []).length;
-                    console.log(`[SYNC] Counts: history=${historyCount}, readinessLogs=${readinessCount}`);
+        if (!token) return;
+        let cancelled = false;
 
-                    setHistory(data.history || []);
-                    setPainLogs(data.painLogs || []);
-                    setWeights(data.weights || {});
-                    setAchievements(data.achievements || []);
-                    setReadinessLogs(data.readinessLogs || []);
-                })
-                .catch(e => {
-                    console.error(e);
-                    setToken(null);
-                    localStorage.removeItem('user_token');
-                })
-                .finally(() => setLoading(false));
-        }
-    }, [token]);
+        const runSync = async () => {
+            try {
+                // If using real backend, verify token validity here
+                // For now, load data
+                const data = await apiClient('/data/sync', 'GET', null, token);
+                if (cancelled) return;
+
+                console.log(`[SYNC] Success! Received keys:`, Object.keys(data));
+                const normalized = normalizeSnapshotData(data);
+                const meta = (data && typeof data.meta === 'object') ? data.meta : {};
+                const typesMissing = getMissingTypes(normalized, meta);
+                const payloadEmpty = DATA_TYPES.filter((type) => isPayloadEmpty(normalized[type])).length === DATA_TYPES.length;
+                const existingSnapshot = loadLastSyncSnapshot();
+                const snapshot = existingSnapshot && existingSnapshot.userId && userId && existingSnapshot.userId !== userId
+                    ? null
+                    : existingSnapshot;
+                const hasSnapshotData = snapshot && hasAnyData(snapshot.data);
+
+                console.log(`[SYNC] Counts: history=${normalized.history.length}, readinessLogs=${normalized.readinessLogs.length}`);
+
+                setHistory(normalized.history);
+                setPainLogs(normalized.painLogs);
+                setWeights(normalized.weights);
+                setAchievements(normalized.achievements);
+                setReadinessLogs(normalized.readinessLogs);
+
+                if (payloadEmpty) {
+                    trackEvent('sync_empty_after_write', {
+                        userId,
+                        hasLocalSnapshot: !!hasSnapshotData,
+                        typesMissing
+                    });
+
+                    if (hasSnapshotData) {
+                        const latestServerUpdatedAt = getLatestServerUpdatedAt(meta);
+                        const serverNewer = latestServerUpdatedAt
+                            && snapshot.lastSyncedAt
+                            && new Date(latestServerUpdatedAt) > new Date(snapshot.lastSyncedAt);
+
+                        if (serverNewer) {
+                            trackEvent('restore_blocked_newer_server', {
+                                userId,
+                                snapshotLastSyncedAt: snapshot.lastSyncedAt,
+                                serverLastUpdatedAt: latestServerUpdatedAt
+                            });
+                        }
+
+                        setSyncRecovery({
+                            show: true,
+                            blocked: !!serverNewer,
+                            reason: serverNewer ? 'Восстановление недоступно: на сервере есть более свежие данные.' : '',
+                            snapshot
+                        });
+                    } else {
+                        setSyncRecovery({ show: false, blocked: false, reason: '', snapshot: null });
+                    }
+                } else {
+                    saveLastSyncSnapshot({ data: normalized, lastSyncedAt: new Date().toISOString(), userId });
+                    setSyncRecovery({ show: false, blocked: false, reason: '', snapshot: null });
+                }
+            } catch (e) {
+                if (cancelled) return;
+                console.error(e);
+                setToken(null);
+                localStorage.removeItem('user_token');
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        runSync();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [token, apiClient, userId]);
 
     // Helper to sync specific data to backend
-    const syncData = async (type, payload) => {
+    const updateSnapshotForType = (type, payload, savedAt) => {
+        const existingSnapshot = loadLastSyncSnapshot();
+        const snapshot = existingSnapshot && existingSnapshot.userId && userId && existingSnapshot.userId !== userId
+            ? null
+            : existingSnapshot;
+        const baseData = snapshot?.data || { history, painLogs, weights, achievements, readinessLogs };
+        const nextData = { ...normalizeSnapshotData(baseData), [type]: payload };
+        saveLastSyncSnapshot({ data: nextData, lastSyncedAt: savedAt || new Date().toISOString(), userId });
+    };
+
+    const syncData = async (type, payload, options = {}) => {
         if (loading) {
             console.log(`[SYNC] Sync blocked for ${type} (loading is true)`);
             return;
@@ -1686,11 +1852,38 @@ export default function App() {
         try {
             if (token) {
                 console.log(`[SYNC] Saving ${type} to backend...`, payload);
-                await apiRequest(`/data/${type}`, 'POST', payload, token);
+                const endpoint = options.restoreFromSnapshot ? `/data/${type}?restoreFromSnapshot=1` : `/data/${type}`;
+                const body = options.restoreFromSnapshot ? { data: payload } : payload;
+                const response = await apiClient(endpoint, 'POST', body, token);
+                if (response && response.savedAt) {
+                    updateSnapshotForType(type, payload, response.savedAt);
+                }
             }
         } catch (e) {
             console.error("Sync failed", e);
         }
+    };
+
+    const handleRestoreSnapshot = async () => {
+        if (!syncRecovery.snapshot || syncRecovery.blocked) return;
+        const snapshotData = normalizeSnapshotData(syncRecovery.snapshot.data);
+
+        setHistory(snapshotData.history);
+        setPainLogs(snapshotData.painLogs);
+        setWeights(snapshotData.weights);
+        setAchievements(snapshotData.achievements);
+        setReadinessLogs(snapshotData.readinessLogs);
+        setSyncRecovery({ show: false, blocked: false, reason: '', snapshot: null });
+
+        try {
+            await Promise.all(DATA_TYPES.map((type) => syncData(type, snapshotData[type], { restoreFromSnapshot: true })));
+        } catch (e) {
+            console.error('Restore from snapshot failed', e);
+        }
+    };
+
+    const handleDismissRecovery = () => {
+        setSyncRecovery({ show: false, blocked: false, reason: '', snapshot: null });
     };
 
     const levelData = useMemo(() => {
@@ -1809,6 +2002,34 @@ export default function App() {
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 select-none">
             <div className="max-w-md mx-auto bg-white min-h-screen relative shadow-2xl overflow-hidden">
                 {!activeWorkout && <Header level={levelData.level} xp={levelData.xp} xpToNext={levelData.xpToNext} onLogout={handleLogout} />}
+                {!activeWorkout && syncRecovery.show && (
+                    <div className="mx-4 mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
+                        <div className="text-sm font-semibold">Данные не найдены на сервере. Восстановить локальную копию?</div>
+                        {syncRecovery.snapshot?.lastSyncedAt && (
+                            <div className="mt-1 text-xs text-amber-800">
+                                Последняя синхронизация: {syncRecovery.snapshot.lastSyncedAt}
+                            </div>
+                        )}
+                        {syncRecovery.reason && (
+                            <div className="mt-2 text-xs text-amber-800">{syncRecovery.reason}</div>
+                        )}
+                        <div className="mt-3 flex gap-2">
+                            <button
+                                onClick={handleRestoreSnapshot}
+                                disabled={syncRecovery.blocked}
+                                className="flex-1 rounded-xl bg-amber-600 px-3 py-2 text-xs font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                                Восстановить
+                            </button>
+                            <button
+                                onClick={handleDismissRecovery}
+                                className="flex-1 rounded-xl border border-amber-200 px-3 py-2 text-xs font-semibold text-amber-900"
+                            >
+                                Не сейчас
+                            </button>
+                        </div>
+                    </div>
+                )}
                 <main className={`${activeWorkout ? 'h-screen' : ''}`}>
                     {activeWorkout ? (
                         <WorkoutPlayer
@@ -1853,4 +2074,4 @@ export default function App() {
     );
 }
 
-export { AuthScreen, ReadinessSurveyModal, checkAchievementConditions, apiRequest, mockApi, WorkoutsView, WorkoutPlayer };
+export { AuthScreen, ReadinessSurveyModal, checkAchievementConditions, apiRequest, mockApi, mergeLegacyData, WorkoutsView, WorkoutPlayer };

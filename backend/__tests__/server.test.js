@@ -6,6 +6,7 @@ const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const mockUtf8 = jest.fn((value) => ({ utf8: value }));
 const mockWithSession = jest.fn();
@@ -31,6 +32,7 @@ const {
 } = require('../server');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key-123';
+const makeChecksum = (payload) => crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex');
 
 afterAll(() => {
     logSpy.mockRestore();
@@ -125,7 +127,7 @@ describe('db operations', () => {
         expect(mockUtf8).toHaveBeenCalledWith('a@b.com');
     });
 
-    it('getData returns payload by type', async () => {
+    it('getData returns payload by type with meta defaults', async () => {
         const resultSets = [{
             columns: [{ name: 'type' }, { name: 'payload' }],
             rows: [{
@@ -148,7 +150,15 @@ describe('db operations', () => {
             painLogs: [],
             weights: { squat: 10 },
             achievements: [],
-            readinessLogs: []
+            readinessLogs: [],
+            legacyKeyNotFound: false,
+            meta: {
+                history: { lastUpdatedAt: null, checksum: makeChecksum([{ id: 1, exerciseType: 'time', strength: null }]), source: 'primary' },
+                painLogs: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' },
+                weights: { lastUpdatedAt: null, checksum: makeChecksum({ squat: 10 }), source: 'primary' },
+                achievements: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' },
+                readinessLogs: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' }
+            }
         });
     });
 
@@ -176,7 +186,22 @@ describe('db operations', () => {
             painLogs: [],
             weights: {},
             achievements: [],
-            readinessLogs: []
+            readinessLogs: [],
+            legacyKeyNotFound: false,
+            meta: {
+                history: {
+                    lastUpdatedAt: null,
+                    checksum: makeChecksum([
+                        { id: 1, exerciseType: 'reps', strength: { weight: 10, sets: 3, reps: 8, restSec: 60 } },
+                        { id: 2, exerciseType: 'time', strength: null }
+                    ]),
+                    source: 'primary'
+                },
+                painLogs: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' },
+                weights: { lastUpdatedAt: null, checksum: makeChecksum({}), source: 'primary' },
+                achievements: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' },
+                readinessLogs: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' }
+            }
         });
     });
 
@@ -218,7 +243,15 @@ describe('db operations', () => {
             painLogs: [],
             weights: { squat: 10 },
             achievements: [],
-            readinessLogs: []
+            readinessLogs: [],
+            legacyKeyNotFound: false,
+            meta: {
+                history: { lastUpdatedAt: null, checksum: makeChecksum([{ id: 1, exerciseType: 'time', strength: null }]), source: 'legacy' },
+                painLogs: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' },
+                weights: { lastUpdatedAt: null, checksum: makeChecksum({ squat: 10 }), source: 'legacy' },
+                achievements: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' },
+                readinessLogs: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' }
+            }
         });
         expect(executeQuery).toHaveBeenCalledTimes(2);
         expect(saveSpy).toHaveBeenCalledWith('new-user-id', 'history', [{ id: 1, exerciseType: 'time', strength: null }]);
@@ -269,6 +302,8 @@ describe('routes', () => {
         db.createUser = jest.fn();
         db.getData = jest.fn();
         db.saveData = jest.fn();
+        db.getDataByType = jest.fn();
+        db.updateMeta = jest.fn();
     });
 
     it('GET / responds with health status', async () => {
@@ -342,10 +377,18 @@ describe('routes', () => {
 
     it('GET /data/sync returns user data', async () => {
         const token = jwt.sign({ id: 'u1', email: 'a@b.com' }, JWT_SECRET);
-        db.getData.mockResolvedValue({ history: [] });
+        db.getData.mockResolvedValue({
+            history: [],
+            legacyKeyNotFound: false,
+            meta: { history: { lastUpdatedAt: null, checksum: null, source: 'primary' } }
+        });
         const res = await request(app).get('/data/sync').set('Authorization', `Bearer ${token}`);
         expect(res.status).toBe(200);
-        expect(res.body).toEqual({ history: [] });
+        expect(res.body).toEqual({
+            history: [],
+            legacyKeyNotFound: false,
+            meta: { history: { lastUpdatedAt: null, checksum: null, source: 'primary' } }
+        });
     });
 
     it('GET /data/sync handles db errors', async () => {
@@ -356,12 +399,30 @@ describe('routes', () => {
         expect(res.body.error).toBe('boom');
     });
 
-    it('POST /data/:type persists payload', async () => {
+    it('POST /data/:type persists payload with metadata', async () => {
         const token = jwt.sign({ id: 'u1', email: 'a@b.com' }, JWT_SECRET);
+        db.getDataByType.mockResolvedValue({ payload: { ok: true } });
         const res = await request(app).post('/data/history').set('Authorization', `Bearer ${token}`).send({ ok: true });
         expect(res.status).toBe(200);
-        expect(res.body).toEqual({ success: true });
+        expect(res.body).toEqual(expect.objectContaining({
+            success: true,
+            type: 'history',
+            checksum: crypto.createHash('sha256').update(JSON.stringify({ ok: true })).digest('hex'),
+            itemCount: null,
+            payloadSize: JSON.stringify({ ok: true }).length
+        }));
+        expect(res.body.savedAt).toEqual(expect.any(String));
         expect(db.saveData).toHaveBeenCalledWith('u1', 'history', { ok: true });
+        expect(db.updateMeta).toHaveBeenCalled();
+        expect(db.getDataByType).toHaveBeenCalledWith('u1', 'history');
+    });
+
+    it('POST /data/:type fails on read-after-write mismatch', async () => {
+        const token = jwt.sign({ id: 'u1', email: 'a@b.com' }, JWT_SECRET);
+        db.getDataByType.mockResolvedValue({ payload: { ok: false } });
+        const res = await request(app).post('/data/history').set('Authorization', `Bearer ${token}`).send({ ok: true });
+        expect(res.status).toBe(500);
+        expect(res.body.error).toBe('write_mismatch');
     });
 
     it('POST /data/:type handles db errors', async () => {
