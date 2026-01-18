@@ -409,6 +409,44 @@ const db = {
                 Session.AUTO_TX_RW
             );
         });
+    },
+    // Performs write + read verification in same session to avoid race conditions
+    saveDataWithVerification: async (userId, type, payload) => {
+        if (!dbDriver) throw new Error("Database driver not initialized");
+        const payloadStr = JSON.stringify(payload);
+
+        return await dbDriver.tableClient.withSession(async (session) => {
+            // 1. Write data
+            const writeQuery = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; DECLARE $payload AS Utf8; UPSERT INTO userData (userId, type, payload) VALUES ($userId, $type, $payload);`;
+            console.log(`[DB] Saving data for ${userId}, type=${type}, payload length=${payloadStr.length}`, {
+                env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
+            });
+            await session.executeQuery(
+                writeQuery,
+                {
+                    '$userId': TypedValues.utf8(userId),
+                    '$type': TypedValues.utf8(type),
+                    '$payload': TypedValues.utf8(payloadStr)
+                },
+                Session.AUTO_TX_RW
+            );
+
+            // 2. Read back data in the same session for verification
+            const readQuery = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; SELECT type, payload FROM userData WHERE userId = $userId AND type = $type;`;
+            const { resultSets } = await session.executeQuery(readQuery, {
+                '$userId': TypedValues.utf8(userId),
+                '$type': TypedValues.utf8(type)
+            });
+
+            const rows = resultSets?.[0]?.rows || [];
+            const columns = resultSets?.[0]?.columns || [];
+            if (rows.length === 0) {
+                return { verified: false, readPayload: null };
+            }
+            const formatted = formatRow(rows[0], columns);
+            const readPayload = parsePayload(formatted.payload, type);
+            return { verified: true, readPayload };
+        });
     }
 };
 
@@ -508,13 +546,29 @@ app.post('/data/:type', authMiddleware, async (req, res) => {
         const payloadSize = getPayloadSize(payloadStr);
         const savedAt = new Date().toISOString();
 
-        await db.saveData(req.user.id, type, safePayload);
+        // Use atomic write+verify in same session to avoid race conditions
+        const { verified, readPayload } = await db.saveDataWithVerification(req.user.id, type, safePayload);
         await db.updateMeta(req.user.id, type, { lastUpdatedAt: savedAt, checksum });
 
-        const readback = await db.getDataByType(req.user.id, type);
-        const readPayloadStr = JSON.stringify(readback.payload ?? null);
+        if (!verified) {
+            console.error('[EVENT] write_mismatch', {
+                userId: req.user.id,
+                type,
+                payloadSize,
+                itemCount,
+                checksum,
+                readItemCount: null,
+                readChecksum: null,
+                restoreFromSnapshot,
+                reason: 'verification_read_empty',
+                env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
+            });
+            return res.status(500).json({ error: 'write_mismatch' });
+        }
+
+        const readPayloadStr = JSON.stringify(readPayload ?? null);
         const readChecksum = calculateChecksum(readPayloadStr);
-        const readItemCount = getItemCount(readback.payload);
+        const readItemCount = getItemCount(readPayload);
 
         if (readChecksum !== checksum || (itemCount !== null && readItemCount !== itemCount)) {
             console.error('[EVENT] write_mismatch', {
@@ -526,6 +580,7 @@ app.post('/data/:type', authMiddleware, async (req, res) => {
                 readItemCount,
                 readChecksum,
                 restoreFromSnapshot,
+                reason: 'checksum_or_count_mismatch',
                 env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
             });
             return res.status(500).json({ error: 'write_mismatch' });

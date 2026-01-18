@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
-const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+const logSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
+const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
@@ -168,10 +168,12 @@ describe('db operations', () => {
             rows: [{
                 items: [
                     { textValue: 'history' },
-                    { textValue: JSON.stringify([
-                        { id: 1, exerciseType: 'reps', strength: { weight: 10, sets: 3, reps: 8, restSec: 60 } },
-                        { id: 2 }
-                    ]) }
+                    {
+                        textValue: JSON.stringify([
+                            { id: 1, exerciseType: 'reps', strength: { weight: 10, sets: 3, reps: 8, restSec: 60 } },
+                            { id: 2 }
+                        ])
+                    }
                 ]
             }]
         }];
@@ -302,6 +304,7 @@ describe('routes', () => {
         db.createUser = jest.fn();
         db.getData = jest.fn();
         db.saveData = jest.fn();
+        db.saveDataWithVerification = jest.fn();
         db.getDataByType = jest.fn();
         db.updateMeta = jest.fn();
     });
@@ -401,7 +404,7 @@ describe('routes', () => {
 
     it('POST /data/:type persists payload with metadata', async () => {
         const token = jwt.sign({ id: 'u1', email: 'a@b.com' }, JWT_SECRET);
-        db.getDataByType.mockResolvedValue({ payload: { ok: true } });
+        db.saveDataWithVerification.mockResolvedValue({ verified: true, readPayload: { ok: true } });
         const res = await request(app).post('/data/history').set('Authorization', `Bearer ${token}`).send({ ok: true });
         expect(res.status).toBe(200);
         expect(res.body).toEqual(expect.objectContaining({
@@ -412,14 +415,13 @@ describe('routes', () => {
             payloadSize: JSON.stringify({ ok: true }).length
         }));
         expect(res.body.savedAt).toEqual(expect.any(String));
-        expect(db.saveData).toHaveBeenCalledWith('u1', 'history', { ok: true });
+        expect(db.saveDataWithVerification).toHaveBeenCalledWith('u1', 'history', { ok: true });
         expect(db.updateMeta).toHaveBeenCalled();
-        expect(db.getDataByType).toHaveBeenCalledWith('u1', 'history');
     });
 
     it('POST /data/:type fails on read-after-write mismatch', async () => {
         const token = jwt.sign({ id: 'u1', email: 'a@b.com' }, JWT_SECRET);
-        db.getDataByType.mockResolvedValue({ payload: { ok: false } });
+        db.saveDataWithVerification.mockResolvedValue({ verified: true, readPayload: { ok: false } });
         const res = await request(app).post('/data/history').set('Authorization', `Bearer ${token}`).send({ ok: true });
         expect(res.status).toBe(500);
         expect(res.body.error).toBe('write_mismatch');
@@ -427,7 +429,7 @@ describe('routes', () => {
 
     it('POST /data/:type handles db errors', async () => {
         const token = jwt.sign({ id: 'u1', email: 'a@b.com' }, JWT_SECRET);
-        db.saveData.mockRejectedValue(new Error('save failed'));
+        db.saveDataWithVerification.mockRejectedValue(new Error('save failed'));
         const res = await request(app).post('/data/history').set('Authorization', `Bearer ${token}`).send({ ok: true });
         expect(res.status).toBe(500);
         expect(res.body.error).toBe('save failed');
