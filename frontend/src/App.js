@@ -132,24 +132,24 @@ const saveLastSyncSnapshot = (snapshot) => {
 
 const EXERCISES = {
     // Relax
-    suboccipital_release: { id: 'suboccipital_release', title: 'Релиз основания черепа', equipment: 'Сдвоенный мяч', description: 'Положите сдвоенный мяч под основание черепа. Лежите неподвижно или делайте легкие кивки "Да-Да".', duration: 90, type: 'relax' },
-    upper_traps_ball: { id: 'upper_traps_ball', title: 'Проработка трапеции', equipment: 'Одинарный мяч', description: 'Встаньте у стены, поместите мяч между стеной и верхней частью трапеции.', duration: 60, type: 'relax' },
-    thoracic_roll: { id: 'thoracic_roll', title: 'Прокатка грудного отдела', equipment: 'Деревянный ролл', description: 'Катайте ролл от низа лопаток до основания шеи. Не заходите на поясницу!', duration: 120, type: 'relax' },
-    glute_roll: { id: 'glute_roll', title: 'МФР Ягодичных мышц', equipment: 'Деревянный ролл', description: 'Сядьте на ролл одной ягодицей, согнув ногу. Катайтесь медленно.', duration: 90, type: 'relax' },
-    sacrum_release: { id: 'sacrum_release', title: 'Релиз крестца', equipment: 'Сдвоенный мяч', description: 'Положите мяч под крестец. Подтяните колени к груди.', duration: 60, type: 'relax' },
+    suboccipital_release: { id: 'suboccipital_release', title: 'Релиз основания черепа', equipment: 'Сдвоенный мяч', description: 'Положите сдвоенный мяч под основание черепа. Лежите неподвижно или делайте легкие кивки "Да-Да".', duration: 90, type: 'relax', zones: ['Шея'], pressureImpact: false, position: 'lying' },
+    upper_traps_ball: { id: 'upper_traps_ball', title: 'Проработка трапеции', equipment: 'Одинарный мяч', description: 'Встаньте у стены, поместите мяч между стеной и верхней частью трапеции.', duration: 60, type: 'relax', zones: ['Плечи'], pressureImpact: false, position: 'standing' },
+    thoracic_roll: { id: 'thoracic_roll', title: 'Прокатка грудного отдела', equipment: 'Деревянный ролл', description: 'Катайте ролл от низа лопаток до основания шеи. Не заходите на поясницу!', duration: 120, type: 'relax', zones: ['Спина'], pressureImpact: false, position: 'lying' },
+    glute_roll: { id: 'glute_roll', title: 'МФР Ягодичных мышц', equipment: 'Деревянный ролл', description: 'Сядьте на ролл одной ягодицей, согнув ногу. Катайтесь медленно.', duration: 90, type: 'relax', zones: ['Ягодицы'], pressureImpact: false, position: 'sitting' },
+    sacrum_release: { id: 'sacrum_release', title: 'Релиз крестца', equipment: 'Сдвоенный мяч', description: 'Положите мяч под крестец. Подтяните колени к груди.', duration: 60, type: 'relax', zones: ['Ягодицы'], pressureImpact: false, position: 'lying' },
 
     // Strength
-    dumbbell_row: { id: 'dumbbell_row', title: 'Тяга гантели в наклоне', equipment: 'Гантель', description: 'Опора рукой о стул. Спина прямая. Тяните гантель к поясу.', duration: 45, isStrength: true, type: 'strength' },
-    goblet_squat: { id: 'goblet_squat', title: 'Кубковые приседания', equipment: 'Гантель', description: 'Держите гантель у груди. Ноги чуть шире плеч. Приседайте.', duration: 60, isStrength: true, type: 'strength' },
-    romanian_deadlift: { id: 'romanian_deadlift', title: 'Румынская тяга', equipment: '2 Гантели', description: 'Отводите таз назад, наклоняясь с прямой спиной.', duration: 60, isStrength: true, type: 'strength' },
-    overhead_press: { id: 'overhead_press', title: 'Жим гантелей стоя', equipment: '2 Гантели', description: 'Выжимайте гантели вверх, не прогибаясь сильно в пояснице.', duration: 45, isStrength: true, type: 'strength' },
-    floor_press: { id: 'floor_press', title: 'Жим гантелей с пола', equipment: '2 Гантели', description: 'Лежа на спине, жмите гантели вверх.', duration: 60, isStrength: true, type: 'strength' },
-    lunges: { id: 'lunges', title: 'Выпады назад', equipment: '2 Гантели', description: 'Делайте шаг назад, опуская колено почти до пола.', duration: 60, isStrength: true, type: 'strength' },
+    dumbbell_row: { id: 'dumbbell_row', title: 'Тяга гантели в наклоне', equipment: 'Гантель', description: 'Опора рукой о стул. Спина прямая. Тяните гантель к поясу.', duration: 45, isStrength: true, type: 'strength', zones: ['Спина', 'Бицепс'], pressureImpact: true, position: 'combined' },
+    goblet_squat: { id: 'goblet_squat', title: 'Кубковые приседания', equipment: 'Гантель', description: 'Держите гантель у груди. Ноги чуть шире плеч. Приседайте.', duration: 60, isStrength: true, type: 'strength', zones: ['Ноги', 'Ягодицы'], pressureImpact: true, position: 'standing' },
+    romanian_deadlift: { id: 'romanian_deadlift', title: 'Румынская тяга', equipment: '2 Гантели', description: 'Отводите таз назад, наклоняясь с прямой спиной.', duration: 60, isStrength: true, type: 'strength', zones: ['Ноги', 'Спина', 'Ягодицы'], pressureImpact: true, position: 'standing' },
+    overhead_press: { id: 'overhead_press', title: 'Жим гантелей стоя', equipment: '2 Гантели', description: 'Выжимайте гантели вверх, не прогибаясь сильно в пояснице.', duration: 45, isStrength: true, type: 'strength', zones: ['Плечи', 'Трицепс'], pressureImpact: true, position: 'standing' },
+    floor_press: { id: 'floor_press', title: 'Жим гантелей с пола', equipment: '2 Гантели', description: 'Лежа на спине, жмите гантели вверх.', duration: 60, isStrength: true, type: 'strength', zones: ['Грудь', 'Трицепс'], pressureImpact: false, position: 'lying' },
+    lunges: { id: 'lunges', title: 'Выпады назад', equipment: '2 Гантели', description: 'Делайте шаг назад, опуская колено почти до пола.', duration: 60, isStrength: true, type: 'strength', zones: ['Ноги', 'Ягодицы'], pressureImpact: true, position: 'standing' },
 
     // Mobility
-    thoracic_extension: { id: 'thoracic_extension', title: 'Разгибание на ролле', equipment: 'Деревянный ролл', description: 'Зафиксируйте ролл под лопатками. На вдохе прогнитесь назад.', duration: 60, type: 'mobility' },
-    cat_cow: { id: 'cat_cow', title: 'Кошка-Корова', equipment: 'Коврик', description: 'Вдох - прогиб, взгляд вверх. Выдох - округление спины.', duration: 60, type: 'mobility' },
-    child_pose: { id: 'child_pose', title: 'Поза ребенка', equipment: 'Коврик', description: 'Сядьте тазом на пятки, руки вытяните вперед.', duration: 45, type: 'mobility' }
+    thoracic_extension: { id: 'thoracic_extension', title: 'Разгибание на ролле', equipment: 'Деревянный ролл', description: 'Зафиксируйте ролл под лопатками. На вдохе прогнитесь назад.', duration: 60, type: 'mobility', zones: ['Спина'], pressureImpact: false, position: 'lying' },
+    cat_cow: { id: 'cat_cow', title: 'Кошка-Корова', equipment: 'Коврик', description: 'Вдох - прогиб, взгляд вверх. Выдох - округление спины.', duration: 60, type: 'mobility', zones: ['Спина'], pressureImpact: false, position: 'combined' },
+    child_pose: { id: 'child_pose', title: 'Поза ребенка', equipment: 'Коврик', description: 'Сядьте тазом на пятки, руки вытяните вперед.', duration: 45, type: 'mobility', zones: ['Спина'], pressureImpact: false, position: 'combined' }
 };
 
 const WORKOUTS = [
@@ -396,8 +396,22 @@ const TabNav = ({ activeTab, setActiveTab }) => {
 };
 
 const WorkoutsView = ({ startWorkout, listState, onListStateChange }) => {
-    const { filter = 'program', selectedCategory = null, scrollTop = 0 } = listState || {};
+    const {
+        filter = 'program',
+        selectedCategory = null,
+        scrollTop = 0,
+        excludeHighPressure = false,
+        selectedPositions = []
+    } = listState || {};
     const scrollRef = useRef(null);
+
+    // Position filter options
+    const POSITION_OPTIONS = [
+        { id: 'standing', label: '🧍 Стоя' },
+        { id: 'sitting', label: '🪑 Сидя' },
+        { id: 'lying', label: '🛌 Лежа' },
+        { id: 'combined', label: '🔄 Комби' }
+    ];
 
     // Apply saved scroll position
     useEffect(() => {
@@ -418,19 +432,65 @@ const WorkoutsView = ({ startWorkout, listState, onListStateChange }) => {
         onListStateChange({ ...listState, scrollTop: e.target.scrollTop });
     };
 
+    const toggleExcludeHighPressure = () => {
+        onListStateChange({ ...listState, excludeHighPressure: !excludeHighPressure, scrollTop: 0 });
+    };
+
+    const togglePosition = (positionId) => {
+        const newPositions = selectedPositions.includes(positionId)
+            ? selectedPositions.filter(p => p !== positionId)
+            : [...selectedPositions, positionId];
+        onListStateChange({ ...listState, selectedPositions: newPositions, scrollTop: 0 });
+    };
+
+    // Filter functions (inline for now, can be imported later)
+    const filterByPressure = (exercises, exclude) => {
+        if (!exclude) return exercises;
+        return exercises.filter(ex => !ex.pressureImpact);
+    };
+
+    const filterByPosition = (exercises, positions) => {
+        if (!positions || positions.length === 0) return exercises;
+        return exercises.filter(ex => positions.includes(ex.position));
+    };
+
+    const filterWorkoutsByPressure = (workouts, exclude) => {
+        if (!exclude) return workouts;
+        return workouts.filter(workout => {
+            return workout.exercises.every(exId => {
+                const exercise = EXERCISES[exId];
+                return exercise && !exercise.pressureImpact;
+            });
+        });
+    };
+
+    const filterWorkoutsByPosition = (workouts, positions) => {
+        if (!positions || positions.length === 0) return workouts;
+        return workouts.filter(workout => {
+            return workout.exercises.every(exId => {
+                const exercise = EXERCISES[exId];
+                return exercise && positions.includes(exercise.position);
+            });
+        });
+    };
+
     const groups = {
         strength: { id: 'strength', label: 'Силовые', icon: <Dumbbell size={32} />, color: 'text-rose-600 bg-rose-50 border-rose-100', list: [] },
         relax: { id: 'relax', label: 'МФР и Релакс', icon: <RotateCcw size={32} />, color: 'text-teal-600 bg-teal-50 border-teal-100', list: [] },
         mobility: { id: 'mobility', label: 'Мобильность', icon: <Activity size={32} />, color: 'text-indigo-600 bg-indigo-50 border-indigo-100', list: [] }
     };
 
-    // Populate Groups
+    // Populate Groups with filtering
     if (filter === 'program') {
-        WORKOUTS.forEach(w => {
+        let filteredWorkouts = filterWorkoutsByPressure(WORKOUTS, excludeHighPressure);
+        filteredWorkouts = filterWorkoutsByPosition(filteredWorkouts, selectedPositions);
+        filteredWorkouts.forEach(w => {
             if (groups[w.type]) groups[w.type].list.push(w);
         });
     } else {
-        Object.values(EXERCISES).forEach(ex => {
+        let filteredExercises = filterByPressure(Object.values(EXERCISES), excludeHighPressure);
+        filteredExercises = filterByPosition(filteredExercises, selectedPositions);
+        filteredExercises.forEach(ex => {
             if (groups[ex.type]) groups[ex.type].list.push(ex);
         });
     }
@@ -444,9 +504,41 @@ const WorkoutsView = ({ startWorkout, listState, onListStateChange }) => {
             <h2 className="text-xl font-bold text-slate-800">Каталог</h2>
 
             {/* Type Toggle */}
-            <div className="flex p-1 bg-slate-100 rounded-xl mb-4">
+            <div className="flex p-1 bg-slate-100 rounded-xl mb-2">
                 <button onClick={() => setFilter('program')} className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${filter === 'program' ? 'bg-white shadow text-slate-800' : 'text-slate-500'}`}>Программы</button>
                 <button onClick={() => setFilter('single')} className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${filter === 'single' ? 'bg-white shadow text-slate-800' : 'text-slate-500'}`}>Упражнения</button>
+            </div>
+
+            {/* Pressure Filter Toggle */}
+            <div
+                data-testid="pressure-filter-toggle"
+                onClick={toggleExcludeHighPressure}
+                className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${excludeHighPressure ? 'bg-rose-50 border-rose-200' : 'bg-white border-slate-100'}`}
+            >
+                <div className="flex items-center space-x-2">
+                    <Shield size={16} className={excludeHighPressure ? 'text-rose-600' : 'text-slate-400'} />
+                    <span className="text-xs font-medium text-slate-700">Исключить ВБД</span>
+                </div>
+                <div className={`w-10 h-5 rounded-full transition-all relative ${excludeHighPressure ? 'bg-rose-500' : 'bg-slate-200'}`}>
+                    <div className={`w-4 h-4 bg-white rounded-full absolute top-0.5 transition-all ${excludeHighPressure ? 'left-5' : 'left-0.5'}`}></div>
+                </div>
+            </div>
+
+            {/* Position Filter Chips */}
+            <div className="flex flex-wrap gap-2" data-testid="position-filter-chips">
+                {POSITION_OPTIONS.map(pos => (
+                    <button
+                        key={pos.id}
+                        data-testid={`position-chip-${pos.id}`}
+                        onClick={() => togglePosition(pos.id)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${selectedPositions.includes(pos.id)
+                                ? 'bg-indigo-100 text-indigo-700 border border-indigo-200'
+                                : 'bg-slate-50 text-slate-500 border border-slate-100'
+                            }`}
+                    >
+                        {pos.label}
+                    </button>
+                ))}
             </div>
 
             <div className="space-y-3">
@@ -488,7 +580,7 @@ const WorkoutsView = ({ startWorkout, listState, onListStateChange }) => {
 
                         <div className="space-y-3">
                             {groups[selectedCategory].list.length === 0 ? (
-                                <div className="text-center text-slate-400 py-8 text-sm">В этой категории пока пусто</div>
+                                <div className="text-center text-slate-400 py-8 text-sm" data-testid="empty-category-message">В этой категории пока пусто</div>
                             ) : (
                                 groups[selectedCategory].list.map(item => (
                                     <div
@@ -505,6 +597,15 @@ const WorkoutsView = ({ startWorkout, listState, onListStateChange }) => {
                                         <div>
                                             <div className="flex items-center space-x-2 mb-1">
                                                 <h3 className="font-bold text-slate-800 text-sm">{item.title}</h3>
+                                                {/* Position Badge */}
+                                                {filter === 'single' && item.position && (
+                                                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">
+                                                        {item.position === 'standing' && '🧍'}
+                                                        {item.position === 'sitting' && '🪑'}
+                                                        {item.position === 'lying' && '🛌'}
+                                                        {item.position === 'combined' && '🔄'}
+                                                    </span>
+                                                )}
                                             </div>
                                             <div className="text-xs text-slate-400 flex items-center">
                                                 {filter === 'program' ? (

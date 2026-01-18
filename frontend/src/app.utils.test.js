@@ -199,8 +199,8 @@ describe('apiRequest', () => {
     const originalFetch = global.fetch;
 
     beforeEach(() => {
-        jest.spyOn(console, 'log').mockImplementation(() => {});
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        jest.spyOn(console, 'log').mockImplementation(() => { });
+        jest.spyOn(console, 'error').mockImplementation(() => { });
     });
 
     afterEach(() => {
@@ -228,7 +228,8 @@ describe('apiRequest', () => {
         expect(global.fetch).toHaveBeenCalledWith('https://example.com/health', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', Authorization: 'Bearer token' },
-            body: null
+            body: null,
+            cache: 'no-store'
         });
     });
 
@@ -241,7 +242,8 @@ describe('apiRequest', () => {
         expect(global.fetch).toHaveBeenCalledWith('https://example.com/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ a: 1 })
+            body: JSON.stringify({ a: 1 }),
+            cache: 'no-store'
         });
     });
 
