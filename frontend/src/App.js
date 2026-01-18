@@ -1758,27 +1758,33 @@ export default function App({ apiClient = apiRequest }) {
             try {
                 // If using real backend, verify token validity here
                 // For now, load data
-                const data = await apiClient('/data/sync', 'GET', null, token);
-                if (cancelled) return;
-
-                console.log(`[SYNC] Success! Received keys:`, Object.keys(data));
-                const normalized = normalizeSnapshotData(data);
-                const meta = (data && typeof data.meta === 'object') ? data.meta : {};
-                const typesMissing = getMissingTypes(normalized, meta);
-                const payloadEmpty = DATA_TYPES.filter((type) => isPayloadEmpty(normalized[type])).length === DATA_TYPES.length;
                 const existingSnapshot = loadLastSyncSnapshot();
                 const snapshot = existingSnapshot && existingSnapshot.userId && userId && existingSnapshot.userId !== userId
                     ? null
                     : existingSnapshot;
+
+                // Cache-busted request
+                const data = await apiClient(`/data/sync?t=${Date.now()}`, 'GET', null, token);
+                if (cancelled) return;
+
+                console.log(`[SYNC] Success! Received keys:`, Object.keys(data));
+                const normalized = normalizeUserData(data);
+                const meta = (data && typeof data.meta === 'object') ? data.meta : {};
+                const typesMissing = getMissingTypes(normalized, meta);
+                const payloadEmpty = DATA_TYPES.filter((type) => isPayloadEmpty(normalized[type])).length === DATA_TYPES.length;
                 const hasSnapshotData = snapshot && hasAnyData(snapshot.data);
 
-                console.log(`[SYNC] Counts: history=${normalized.history.length}, readinessLogs=${normalized.readinessLogs.length}`);
+                console.log(`[SYNC] Counts: history=${normalized.history?.length}, readinessLogs=${normalized.readinessLogs?.length}`);
 
-                setHistory(normalized.history);
-                setPainLogs(normalized.painLogs);
-                setWeights(normalized.weights);
-                setAchievements(normalized.achievements);
-                setReadinessLogs(normalized.readinessLogs);
+                // DATA SAFETY: Never overwrite non-empty local state with empty server data
+                // This prevents "Empty Sync" from wiping out work done in the current session
+                if (normalized.history?.length > 0 || history.length === 0) setHistory(normalized.history);
+                else console.warn("[SYNC] Server returned empty history, keeping local data to prevent loss");
+
+                if (normalized.painLogs?.length > 0 || painLogs.length === 0) setPainLogs(normalized.painLogs);
+                if (Object.keys(normalized.weights || {}).length > 0 || Object.keys(weights).length === 0) setWeights(normalized.weights);
+                if (normalized.achievements?.length > 0 || achievements.length === 0) setAchievements(normalized.achievements);
+                if (normalized.readinessLogs?.length > 0 || readinessLogs.length === 0) setReadinessLogs(normalized.readinessLogs);
 
                 if (payloadEmpty) {
                     trackEvent('sync_empty_after_write', {

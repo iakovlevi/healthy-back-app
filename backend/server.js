@@ -71,8 +71,10 @@ app.use('/data', (req, res, next) => {
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
         'Pragma': 'no-cache',
         'Expires': '0',
-        'Surrogate-Control': 'no-store'
+        'Surrogate-Control': 'no-store',
+        'X-Content-Type-Options': 'nosniff'
     });
+    // Add cache-control to prevent any intermediate caching
     next();
 });
 
@@ -224,14 +226,18 @@ const db = {
     },
     getDataByType: async (userId, type) => {
         if (!dbDriver) throw new Error("Database driver not initialized");
+        console.log(`[DB] getDataByType: userId=${userId}, type=${type}`);
         return await dbDriver.tableClient.withSession(async (session) => {
             const query = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; SELECT type, payload FROM userData WHERE userId = $userId AND type = $type;`;
+            // USE AUTO_TX_RO for consistency
             const { resultSets } = await session.executeQuery(query, {
                 '$userId': TypedValues.utf8(userId),
                 '$type': TypedValues.utf8(type)
-            });
+            }, Session.AUTO_TX_RO);
+
             const rows = resultSets?.[0]?.rows || [];
             const columns = resultSets?.[0]?.columns || [];
+            console.log(`[DB] getDataByType result: found ${rows.length} rows`);
             if (rows.length === 0) {
                 return { payload: null, meta: null };
             }
@@ -273,19 +279,22 @@ const db = {
         await db.saveData(userId, META_TYPE, merged);
         return merged;
     },
+    fetchByUserId: async (id) => {
+        if (!dbDriver) throw new Error("Database driver not initialized");
+        return await dbDriver.tableClient.withSession(async (session) => {
+            const query = `DECLARE $userId AS Utf8; SELECT type, payload FROM userData WHERE userId = $userId;`;
+            // USE AUTO_TX_RO for consistency
+            const { resultSets } = await session.executeQuery(query, {
+                '$userId': TypedValues.utf8(id)
+            }, Session.AUTO_TX_RO);
+            const rows = resultSets?.[0]?.rows || [];
+            const columns = resultSets?.[0]?.columns || [];
+            return { rows, columns };
+        });
+    },
     getData: async (userId, fallbackId = null) => {
         if (!dbDriver) throw new Error("Database driver not initialized");
-        const fetchByUserId = async (id) => {
-            return await dbDriver.tableClient.withSession(async (session) => {
-                const query = `DECLARE $userId AS Utf8; SELECT type, payload FROM userData WHERE userId = $userId;`;
-                const { resultSets } = await session.executeQuery(query, {
-                    '$userId': TypedValues.utf8(id)
-                });
-                const rows = resultSets?.[0]?.rows || [];
-                const columns = resultSets?.[0]?.columns || [];
-                return { rows, columns };
-            });
-        };
+        const fetchByUserId = db.fetchByUserId; // Use the exported helper for easier testing/reuse
 
         const parseRows = (rows, columns, resolvedId) => {
             const data = {};
@@ -482,7 +491,7 @@ const db = {
             const { resultSets } = await session.executeQuery(readQuery, {
                 '$userId': TypedValues.utf8(userId),
                 '$type': TypedValues.utf8(type)
-            });
+            }, Session.AUTO_TX_RO); // Use RO for consistent read-after-write verification
 
             const rows = resultSets?.[0]?.rows || [];
             const columns = resultSets?.[0]?.columns || [];
@@ -580,9 +589,39 @@ app.get('/data/sync', authMiddleware, async (req, res) => {
     }
 });
 
+app.get('/data/debug', authMiddleware, async (req, res) => {
+    try {
+        const raw = await db.fetchByUserId(req.user.id);
+        const rows = raw.rows.map(r => {
+            const formatted = formatRow(r, raw.columns);
+            return {
+                type: formatted.type,
+                payloadLength: formatted.payload?.length,
+                isAtomic: formatted.payload?.includes('"data":')
+            };
+        });
+        res.json({
+            userId: req.user.id,
+            email: req.user.email,
+            rowCount: rows.length,
+            rows,
+            env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.post('/data/:type', authMiddleware, async (req, res) => {
     try {
-        const type = req.params.type;
+        // Robust type extraction: check params, then path
+        let type = req.params.type;
+        if (!type || type === '{type}') {
+            type = req.path.split('/').pop();
+        }
+
+        console.log(`[DATA] Saving type="${type}" from path="${req.path}" for user="${req.user.id}"`);
+
         const restoreFromSnapshot = req.query.restoreFromSnapshot === '1' || req.query.restoreFromSnapshot === 'true';
         const payload = (restoreFromSnapshot
             && req.body
