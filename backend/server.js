@@ -233,13 +233,27 @@ const db = {
             const rows = resultSets?.[0]?.rows || [];
             const columns = resultSets?.[0]?.columns || [];
             if (rows.length === 0) {
-                return { payload: null };
+                return { payload: null, meta: null };
             }
             const formatted = formatRow(rows[0], columns);
-            return { payload: parsePayload(formatted.payload, formatted.type) };
+            const parsed = parsePayload(formatted.payload, formatted.type);
+
+            // Handle atomic metadata format
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.data !== undefined) {
+                return {
+                    payload: parsed.data,
+                    meta: {
+                        lastUpdatedAt: parsed.lastUpdatedAt || null,
+                        checksum: parsed.checksum || null
+                    }
+                };
+            }
+
+            return { payload: parsed, meta: null };
         });
     },
     getMeta: async (userId) => {
+        // Legacy getMeta for backward compatibility
         const result = await db.getDataByType(userId, META_TYPE);
         if (result.payload && typeof result.payload === 'object') {
             return result.payload;
@@ -247,6 +261,7 @@ const db = {
         return {};
     },
     updateMeta: async (userId, type, metaPatch) => {
+        // No longer used for new data, but kept for legacy support/migration
         const current = await db.getMeta(userId);
         const merged = {
             ...current,
@@ -281,13 +296,23 @@ const db = {
             rows.forEach((row, idx) => {
                 const formatted = formatRow(row, columns);
                 const parsed = parsePayload(formatted.payload, formatted.type);
-                console.log(`[DB] Row ${idx} type:`, formatted.type, 'Payload length:', formatted.payload?.length);
+
                 if (formatted.type === META_TYPE) {
                     if (parsed && typeof parsed === 'object') {
-                        meta = parsed;
+                        // Merge legacy meta
+                        meta = { ...meta, ...parsed };
                     }
                 } else {
-                    data[formatted.type] = parsed;
+                    // Check for atomic metadata format
+                    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.data !== undefined) {
+                        data[formatted.type] = parsed.data;
+                        meta[formatted.type] = {
+                            lastUpdatedAt: parsed.lastUpdatedAt || null,
+                            checksum: parsed.checksum || null
+                        };
+                    } else {
+                        data[formatted.type] = parsed;
+                    }
                     types.push(formatted.type);
                 }
             });
@@ -391,11 +416,22 @@ const db = {
 
         return { ...normalized, meta, legacyKeyNotFound };
     },
-    saveData: async (userId, type, payload) => {
+    saveData: async (userId, type, payload, meta = null) => {
         if (!dbDriver) throw new Error("Database driver not initialized");
         await dbDriver.tableClient.withSession(async (session) => {
             const query = `DECLARE $userId AS Utf8; DECLARE $type AS Utf8; DECLARE $payload AS Utf8; UPSERT INTO userData (userId, type, payload) VALUES ($userId, $type, $payload);`;
-            const payloadStr = JSON.stringify(payload);
+
+            // Atomic storage: wrap payload with metadata if provided
+            let finalPayload = payload;
+            if (meta && type !== META_TYPE) {
+                finalPayload = {
+                    data: payload,
+                    checksum: meta.checksum,
+                    lastUpdatedAt: meta.lastUpdatedAt || new Date().toISOString()
+                };
+            }
+
+            const payloadStr = JSON.stringify(finalPayload);
             console.log(`[DB] Saving data for ${userId}, type=${type}, payload length=${payloadStr.length}`, {
                 env: { endpoint: YDB_ENDPOINT, database: YDB_DATABASE }
             });
@@ -411,9 +447,19 @@ const db = {
         });
     },
     // Performs write + read verification in same session to avoid race conditions
-    saveDataWithVerification: async (userId, type, payload) => {
+    saveDataWithVerification: async (userId, type, payload, meta = null) => {
         if (!dbDriver) throw new Error("Database driver not initialized");
-        const payloadStr = JSON.stringify(payload);
+
+        // Atomic storage: wrap payload with metadata if provided
+        let finalPayload = payload;
+        if (meta && type !== META_TYPE) {
+            finalPayload = {
+                data: payload,
+                checksum: meta.checksum,
+                lastUpdatedAt: meta.lastUpdatedAt || new Date().toISOString()
+            };
+        }
+        const payloadStr = JSON.stringify(finalPayload);
 
         return await dbDriver.tableClient.withSession(async (session) => {
             // 1. Write data
@@ -444,8 +490,14 @@ const db = {
                 return { verified: false, readPayload: null };
             }
             const formatted = formatRow(rows[0], columns);
-            const readPayload = parsePayload(formatted.payload, type);
-            return { verified: true, readPayload };
+            const parsed = parsePayload(formatted.payload, type);
+
+            // Unwrap if using atomic format
+            const readData = (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.data !== undefined)
+                ? parsed.data
+                : parsed;
+
+            return { verified: true, readPayload: readData };
         });
     }
 };
@@ -546,9 +598,10 @@ app.post('/data/:type', authMiddleware, async (req, res) => {
         const payloadSize = getPayloadSize(payloadStr);
         const savedAt = new Date().toISOString();
 
-        // Use atomic write+verify in same session to avoid race conditions
-        const { verified, readPayload } = await db.saveDataWithVerification(req.user.id, type, safePayload);
-        await db.updateMeta(req.user.id, type, { lastUpdatedAt: savedAt, checksum });
+        // Use atomic write+verify including metadata in the same payload
+        // This eliminates the race condition between data and __meta__ updates
+        const meta = { checksum, lastUpdatedAt: savedAt };
+        const { verified, readPayload } = await db.saveDataWithVerification(req.user.id, type, safePayload, meta);
 
         if (!verified) {
             console.error('[EVENT] write_mismatch', {

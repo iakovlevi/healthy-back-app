@@ -415,8 +415,7 @@ describe('routes', () => {
             payloadSize: JSON.stringify({ ok: true }).length
         }));
         expect(res.body.savedAt).toEqual(expect.any(String));
-        expect(db.saveDataWithVerification).toHaveBeenCalledWith('u1', 'history', { ok: true });
-        expect(db.updateMeta).toHaveBeenCalled();
+        expect(db.saveDataWithVerification).toHaveBeenCalledWith('u1', 'history', { ok: true }, expect.any(Object));
     });
 
     it('POST /data/:type fails on read-after-write mismatch', async () => {
