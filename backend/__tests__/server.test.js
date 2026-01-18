@@ -20,7 +20,8 @@ jest.mock('ydb-sdk', () => ({
         }
     })),
     getCredentialsFromEnv: jest.fn(() => ({})),
-    TypedValues: { utf8: (...args) => mockUtf8(...args) }
+    TypedValues: { utf8: (...args) => mockUtf8(...args) },
+    Session: { AUTO_TX_RO: 'AUTO_TX_RO', AUTO_TX_RW: 'AUTO_TX_RW' }
 }), { virtual: true });
 
 const {
@@ -237,6 +238,7 @@ describe('db operations', () => {
         setDbDriverForTests(driver);
 
         const saveSpy = jest.spyOn(db, 'saveData').mockResolvedValue();
+        const metaSpy = jest.spyOn(db, 'updateMeta').mockResolvedValue({});
 
         const data = await db.getData('new-user-id', 'legacy@example.com');
 
@@ -248,9 +250,9 @@ describe('db operations', () => {
             readinessLogs: [],
             legacyKeyNotFound: false,
             meta: {
-                history: { lastUpdatedAt: null, checksum: makeChecksum([{ id: 1, exerciseType: 'time', strength: null }]), source: 'legacy' },
+                history: { lastUpdatedAt: expect.any(String), checksum: makeChecksum([{ id: 1, exerciseType: 'time', strength: null }]), source: 'legacy' },
                 painLogs: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' },
-                weights: { lastUpdatedAt: null, checksum: makeChecksum({ squat: 10 }), source: 'legacy' },
+                weights: { lastUpdatedAt: expect.any(String), checksum: makeChecksum({ squat: 10 }), source: 'legacy' },
                 achievements: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' },
                 readinessLogs: { lastUpdatedAt: null, checksum: makeChecksum([]), source: 'primary' }
             }
@@ -260,6 +262,7 @@ describe('db operations', () => {
         expect(saveSpy).toHaveBeenCalledWith('new-user-id', 'weights', { squat: 10 });
 
         saveSpy.mockRestore();
+        metaSpy.mockRestore();
     });
 
     it('saveData stringifies payload', async () => {
@@ -415,6 +418,20 @@ describe('routes', () => {
             payloadSize: JSON.stringify({ ok: true }).length
         }));
         expect(res.body.savedAt).toEqual(expect.any(String));
+        expect(db.saveDataWithVerification).toHaveBeenCalledWith('u1', 'history', { ok: true }, expect.any(Object));
+    });
+
+    it('POST /data/:type falls back to query type when path param is placeholder', async () => {
+        const token = jwt.sign({ id: 'u1', email: 'a@b.com' }, JWT_SECRET);
+        db.saveDataWithVerification.mockResolvedValue({ verified: true, readPayload: { ok: true } });
+
+        const res = await request(app)
+            .post('/data/%7Btype%7D?type=history')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ ok: true });
+
+        expect(res.status).toBe(200);
+        expect(res.body.type).toBe('history');
         expect(db.saveDataWithVerification).toHaveBeenCalledWith('u1', 'history', { ok: true }, expect.any(Object));
     });
 

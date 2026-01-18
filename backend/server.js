@@ -188,6 +188,65 @@ const normalizeUserData = (data) => {
     return normalized;
 };
 
+const isPlaceholderType = (value) => {
+    if (typeof value !== 'string') return false;
+    return value === '{type}' || /{[^}]*}/.test(value);
+};
+
+const extractTypeFromValue = (value) => {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+
+    const noQuery = trimmed.split('?')[0];
+    if (!noQuery.includes('/')) {
+        return isPlaceholderType(noQuery) ? null : noQuery;
+    }
+
+    let path = noQuery;
+    if (/^https?:\/\//i.test(noQuery)) {
+        try {
+            path = new URL(noQuery).pathname;
+        } catch (e) {
+            path = noQuery;
+        }
+    }
+
+    const index = path.lastIndexOf('/data/');
+    if (index === -1) return null;
+    const remainder = path.slice(index + 6).replace(/\/+$/, '');
+    if (!remainder) return null;
+    const candidate = remainder.split('/')[0];
+    if (!candidate || isPlaceholderType(candidate)) return null;
+    return candidate;
+};
+
+const resolveDataType = (req) => {
+    const headerKeys = [
+        'x-original-uri',
+        'x-original-url',
+        'x-forwarded-uri',
+        'x-rewrite-url',
+        'x-envoy-original-path'
+    ];
+
+    const candidates = [
+        req?.params?.type,
+        req?.query?.type,
+        ...headerKeys.map((key) => req?.headers?.[key]),
+        req?.originalUrl,
+        req?.url,
+        req?.path
+    ];
+
+    for (const candidate of candidates) {
+        const extracted = extractTypeFromValue(candidate);
+        if (extracted) return extracted;
+    }
+
+    return null;
+};
+
 // DB OPERATIONS
 const db = {
     getUser: async (email) => {
@@ -614,10 +673,15 @@ app.get('/data/debug', authMiddleware, async (req, res) => {
 
 app.post('/data/:type', authMiddleware, async (req, res) => {
     try {
-        // Robust type extraction: check params, then path
-        let type = req.params.type;
-        if (!type || type === '{type}') {
-            type = req.path.split('/').pop();
+        const type = resolveDataType(req);
+        if (!type || isPlaceholderType(type)) {
+            console.error('[DATA] Invalid type for save', {
+                params: req.params,
+                query: req.query,
+                path: req.path,
+                originalUrl: req.originalUrl
+            });
+            return res.status(400).json({ error: 'invalid_type' });
         }
 
         console.log(`[DATA] Saving type="${type}" from path="${req.path}" for user="${req.user.id}"`);

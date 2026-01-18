@@ -1858,7 +1858,10 @@ export default function App({ apiClient = apiRequest }) {
         try {
             if (token) {
                 console.log(`[SYNC] Saving ${type} to backend...`, payload);
-                const endpoint = options.restoreFromSnapshot ? `/data/${type}?restoreFromSnapshot=1` : `/data/${type}`;
+                const encodedType = encodeURIComponent(type);
+                const endpoint = options.restoreFromSnapshot
+                    ? `/data/${type}?restoreFromSnapshot=1&type=${encodedType}`
+                    : `/data/${type}?type=${encodedType}`;
                 const body = options.restoreFromSnapshot ? { data: payload } : payload;
                 const response = await apiClient(endpoint, 'POST', body, token);
                 if (response && response.savedAt) {
