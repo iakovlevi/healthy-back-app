@@ -1768,7 +1768,7 @@ export default function App({ apiClient = apiRequest }) {
                 if (cancelled) return;
 
                 console.log(`[SYNC] Success! Received keys:`, Object.keys(data));
-                const normalized = normalizeUserData(data);
+                const normalized = normalizeSnapshotData(data);
                 const meta = (data && typeof data.meta === 'object') ? data.meta : {};
                 const typesMissing = getMissingTypes(normalized, meta);
                 const payloadEmpty = DATA_TYPES.filter((type) => isPayloadEmpty(normalized[type])).length === DATA_TYPES.length;
